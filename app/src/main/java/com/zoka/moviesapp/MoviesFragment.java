@@ -3,6 +3,8 @@ package com.zoka.moviesapp;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,18 +17,25 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.zoka.moviesapp.utils.NetworkUtils;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
 public class MoviesFragment extends Fragment {
+    RecyclerView zRecycler;
+    MoviesAdapter adapter;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +46,18 @@ public class MoviesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_movies, container, false);
+        zRecycler = (RecyclerView) rootview.findViewById(R.id.recycler_view_id);
+        adapter = new MoviesAdapter(getActivity(), new ArrayList<MoviesModel>());
+        zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        zRecycler.setHasFixedSize(true);
+        zRecycler.setAdapter(adapter);
+        adapter.setRecyclerListener(new RecyclerClickListener() {
+            @Override
+            public void OnItemClick(View v, int position) {
+                Toast.makeText(getActivity(), ""+position, Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         return rootview;
     }
@@ -49,7 +70,12 @@ public class MoviesFragment extends Fragment {
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.i("ZOKA", "response" + response.toString());
+                        try {
+                            ArrayList<MoviesModel> data = JsonParser.JsonData(response);
+                            adapter.swap(data);
+                        } catch (JSONException e) {
+
+                        }
 
 
                     }
@@ -74,14 +100,10 @@ public class MoviesFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.top_rated_id) {
-            Toast.makeText(getActivity(), "Top", Toast.LENGTH_SHORT).show();
             try {
-                URL url = Network.buildQueryParam(getString(R.string.top_rated));
+                URL url = NetworkUtils.buildQueryParam(NetworkUtils.TOP_RATED);
                 geJsonResponse(url);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -91,9 +113,8 @@ public class MoviesFragment extends Fragment {
 
             return true;
         } else if (id == R.id.popular_id) {
-            Toast.makeText(getActivity(), "popular", Toast.LENGTH_SHORT).show();
             try {
-                URL url = Network.buildQueryParam(getString(R.string.popular));
+                URL url = NetworkUtils.buildQueryParam(NetworkUtils.POPULAR);
                 geJsonResponse(url);
 
 

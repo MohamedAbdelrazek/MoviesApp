@@ -1,13 +1,15 @@
-package com.zoka.moviesapp;
+package com.zoka.moviesapp.utils;
 
 import android.net.Uri;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Network {
+public class NetworkUtils {
     public static String BASE_URL = "http://api.themoviedb.org/3/movie";
     private static String API_KEY_PARAM = "api_key";
+    public static String TOP_RATED = "top_rated";
+    public static String POPULAR = "popular";
     private static String API_KEY = "5764dbdfaaaae09ae32bd0f0c85cf2a5";
 
     public static URL buildQueryParam(String sort_path) throws MalformedURLException {
