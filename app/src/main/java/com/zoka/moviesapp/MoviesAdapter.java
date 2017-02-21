@@ -12,6 +12,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
@@ -20,7 +23,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     private LayoutInflater inflater;
     private Context context;
     private List<MoviesModel> data;
-    private RecyclerClickListener recyclerListener;
+    private MoveClicksFromRecyclerView recyclerListener;
 
     public MoviesAdapter(Context context, List<MoviesModel> data) {
         this.context = context;
@@ -47,8 +50,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         Picasso.with(context).load(currentMoviesData.getPosterPath()).into(holder.posterImage);
     }
 
-    public void setRecyclerListener(RecyclerClickListener recyclerListener) {
+    public void setRecyclerListener(MoveClicksFromRecyclerView recyclerListener) {
         this.recyclerListener = recyclerListener;
+
 
     }
 
@@ -58,16 +62,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.poster_img_view)
         ImageView posterImage;
 
-        public MyViewHolder(View itemView) {
-            super(itemView);
-            posterImage = (ImageView) itemView.findViewById(R.id.poster_img_view);
-            itemView.setOnClickListener(new View.OnClickListener() {
+        public MyViewHolder(View view) {
+            super(view);
+
+            ButterKnife.bind(this, view);
+            view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (recyclerListener != null) {
-                        recyclerListener.OnItemClick(v, data.get(getPosition()));
+                        recyclerListener.OnItemClicked(v, data.get(getPosition()));
                     }
                 }
             });

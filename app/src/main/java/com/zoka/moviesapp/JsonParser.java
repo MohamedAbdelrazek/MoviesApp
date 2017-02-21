@@ -63,20 +63,13 @@ public class JsonParser {
 
     private static String FormatPosterImage(String imageUrl) {
         final String BASE_URL = "http://image.tmdb.org/t/p/";
-        final String IMG_SIZE = "/w342";
+        final String IMG_SIZE = "/w500";
         return BASE_URL + IMG_SIZE + imageUrl;
     }
-    //http://image.tmdb.org/t/p//w342
 
     private static String FormatBackDropImage(String imageUrl) {
         final String BASE_URL = "http://image.tmdb.org/t/p/";
         final String IMG_SIZE = "w780/";
         return BASE_URL + IMG_SIZE + imageUrl;
     }
-    //http://image.tmdb.org/t/p/w780/
-
-
 }
-
-
-

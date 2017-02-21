@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,33 +28,38 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
 public class MoviesFragment extends Fragment {
-    RecyclerView zRecycler;
     MoviesAdapter adapter;
+    @BindView(R.id.recycler_view_id)
+    RecyclerView zRecycler;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootview = inflater.inflate(R.layout.fragment_movies, container, false);
-        zRecycler = (RecyclerView) rootview.findViewById(R.id.recycler_view_id);
+        View view = inflater.inflate(R.layout.fragment_movies, container, false);
+        ButterKnife.bind(this, view);
+
         adapter = new MoviesAdapter(getActivity(), new ArrayList<MoviesModel>());
-        zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        zRecycler.setHasFixedSize(true);
+        zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
         zRecycler.setAdapter(adapter);
-        adapter.setRecyclerListener(new RecyclerClickListener() {
+        adapter.setRecyclerListener(new MoveClicksFromRecyclerView() {
             @Override
-            public void OnItemClick(View v, MoviesModel moviesModel) {
+            public void OnItemClicked(View v, MoviesModel moviesModel) {
                 Intent intent = new Intent(getContext(), DetailsActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("value", moviesModel);
@@ -62,7 +68,14 @@ public class MoviesFragment extends Fragment {
             }
         });
 
-        return rootview;
+        return view;
+    }
+
+    private int calculateNoOfColumns() {
+        DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels;
+        int noOfColumns = (int) (dpWidth / 300);
+        return noOfColumns;
     }
 
     @Override

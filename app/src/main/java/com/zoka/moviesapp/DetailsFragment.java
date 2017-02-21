@@ -13,35 +13,41 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by Mohamed AbdelraZek on 2/21/2017.
  */
 
 public class DetailsFragment extends Fragment {
+    @BindView(R.id.ratingBar)
+    RatingBar zRateView;
+    @BindView(R.id.back_drop_path)
+    ImageView BackDropImageView;
+    @BindView(R.id.movie_title)
+    TextView zTitleView;
+    @BindView(R.id.movie_desc)
+    TextView zDescription;
+    @BindView(R.id.release_data)
+    TextView zReleaseData;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_details, container, false);
+        View zRootView = inflater.inflate(R.layout.fragment_details, container, false);
+        ButterKnife.bind(this, zRootView);
         Intent intent = getActivity().getIntent();
         MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra("value");
-
-
-        RatingBar RateView = (RatingBar) rootView.findViewById(R.id.ratingBar);
-        ImageView BackDropImageView = (ImageView) rootView.findViewById(R.id.back_drop_path);
-        TextView TitleView = (TextView) rootView.findViewById(R.id.movie_title);
-        TextView Description = (TextView) rootView.findViewById(R.id.movie_desc);
-        TextView ReleaseData = (TextView) rootView.findViewById(R.id.release_data);
-        RateView.setRating(Float.parseFloat(moviesModel.getRate()) / 2);
-        BackDropImageView.setMinimumHeight(400);
-
+        zRateView.setRating(Float.parseFloat(moviesModel.getRate()) / 2);
         if (moviesModel.getBackDrop() != null) {
-            Picasso.with(null).load(moviesModel.getBackDrop()).into(BackDropImageView);
+            Picasso.with(null).load(moviesModel.getBackDrop()).placeholder(R.drawable.place_holder).into(BackDropImageView);
         } else {
             Picasso.with(null).load(moviesModel.getPosterPath()).into(BackDropImageView);
         }
-        TitleView.setText(moviesModel.getTitle());
-        Description.setText(moviesModel.getDesc());
-        ReleaseData.setText(moviesModel.getDate());
-        return rootView;
+        zTitleView.setText(moviesModel.getTitle());
+        zDescription.setText(moviesModel.getDesc());
+        zReleaseData.setText(moviesModel.getDate());
+        return zRootView;
     }
 }
