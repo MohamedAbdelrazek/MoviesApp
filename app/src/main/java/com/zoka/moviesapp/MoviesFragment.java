@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -66,6 +65,21 @@ public class MoviesFragment extends Fragment {
         return rootview;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        URL url = null;
+        try {
+            url = NetworkUtils.buildQueryParam(NetworkUtils.TOP_RATED);
+            geJsonResponse(url);
+        } catch (MalformedURLException e) {
+
+        } catch (IOException e) {
+
+        }
+
+    }
+
     private void geJsonResponse(URL queryURl) throws IOException {
         Log.i("ZOKA", "" + queryURl.toString());
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -87,7 +101,7 @@ public class MoviesFragment extends Fragment {
 
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getActivity(), "" + error.toString(), Toast.LENGTH_SHORT).show();
+
 
                     }
                 });
@@ -101,6 +115,7 @@ public class MoviesFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

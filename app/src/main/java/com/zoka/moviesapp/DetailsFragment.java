@@ -22,15 +22,17 @@ public class DetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_details, container, false);
-
         Intent intent = getActivity().getIntent();
         MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra("value");
+
+
         RatingBar RateView = (RatingBar) rootView.findViewById(R.id.ratingBar);
         ImageView BackDropImageView = (ImageView) rootView.findViewById(R.id.back_drop_path);
         TextView TitleView = (TextView) rootView.findViewById(R.id.movie_title);
         TextView Description = (TextView) rootView.findViewById(R.id.movie_desc);
         TextView ReleaseData = (TextView) rootView.findViewById(R.id.release_data);
         RateView.setRating(Float.parseFloat(moviesModel.getRate()) / 2);
+        BackDropImageView.setMinimumHeight(400);
 
         if (moviesModel.getBackDrop() != null) {
             Picasso.with(null).load(moviesModel.getBackDrop()).into(BackDropImageView);
