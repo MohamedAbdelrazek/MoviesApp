@@ -7,5 +7,5 @@ import android.view.View;
  */
 
 public interface RecyclerClickListener {
-    public void OnItemClick(View v , int position);
+    public void OnItemClick(View v , MoviesModel position);
 }

@@ -1,10 +1,12 @@
 package com.zoka.moviesapp;
 
+import java.io.Serializable;
+
 /**
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
-public class MoviesModel {
+public class MoviesModel implements Serializable {
     private String Title;
     private String Desc;
     private String PosterPath;

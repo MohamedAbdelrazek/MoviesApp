@@ -1,5 +1,6 @@
 package com.zoka.moviesapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -53,9 +54,12 @@ public class MoviesFragment extends Fragment {
         zRecycler.setAdapter(adapter);
         adapter.setRecyclerListener(new RecyclerClickListener() {
             @Override
-            public void OnItemClick(View v, int position) {
-                Toast.makeText(getActivity(), ""+position, Toast.LENGTH_SHORT).show();
-
+            public void OnItemClick(View v, MoviesModel moviesModel) {
+                Intent intent = new Intent(getContext(), DetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("value", moviesModel);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 
