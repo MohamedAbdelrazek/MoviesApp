@@ -57,7 +57,7 @@ public class MoviesFragment extends Fragment {
         adapter = new MoviesAdapter(getActivity(), new ArrayList<MoviesModel>());
         zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
         zRecycler.setAdapter(adapter);
-        adapter.setRecyclerListener(new MoveClicksFromRecyclerView() {
+        adapter.setRecyclerListener(new ClickListener() {
             @Override
             public void OnItemClicked(View v, MoviesModel moviesModel) {
                 Intent intent = new Intent(getContext(), DetailsActivity.class);

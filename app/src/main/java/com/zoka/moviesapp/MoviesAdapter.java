@@ -23,7 +23,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     private LayoutInflater inflater;
     private Context context;
     private List<MoviesModel> data;
-    private MoveClicksFromRecyclerView recyclerListener;
+    private ClickListener recyclerListener;
 
     public MoviesAdapter(Context context, List<MoviesModel> data) {
         this.context = context;
@@ -50,7 +50,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         Picasso.with(context).load(currentMoviesData.getPosterPath()).into(holder.posterImage);
     }
 
-    public void setRecyclerListener(MoveClicksFromRecyclerView recyclerListener) {
+    public void setRecyclerListener(ClickListener recyclerListener) {
         this.recyclerListener = recyclerListener;
 
 
