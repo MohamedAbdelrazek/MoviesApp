@@ -3,11 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/top_rated_id"
-        android:title="@string/top_rated"
+        android:title="@string/top_rated_label"
         app:showAsAction="never" />
     <item
         android:id="@+id/popular_id"
-        android:title="@string/popular"
+        android:title="@string/popular_label"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/favourite_id"
+        android:title="@string/favourite_label"
+        android:icon="@drawable/favour"
+        android:showAsAction="never"  />
 
 </menu>

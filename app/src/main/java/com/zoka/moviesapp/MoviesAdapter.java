@@ -35,6 +35,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         data.clear();
         data.addAll(zData);
         notifyDataSetChanged();
+
     }
 
     @Override

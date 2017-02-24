@@ -1,8 +1,10 @@
-package com.zoka.moviesapp;
+package com.zoka.moviesapp.utils;
 
 /**
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
+
+import com.zoka.moviesapp.MoviesModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,10 +12,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class JsonParser {
-    public static ArrayList<MoviesModel> JsonData(JSONObject jsonObject)
+public class JsonUtils {
+    public static ArrayList<MoviesModel> getMoviesData(String jsonString)
             throws JSONException {
-
+        JSONObject jsonObject=new JSONObject(jsonString);
 
         final String MDB_MOVIE_POSTER = "poster_path";
         final String MDB_MOVIE_TITLE = "title";
