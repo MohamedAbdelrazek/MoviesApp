@@ -74,7 +74,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
             public void OnItemClicked(View v, MoviesModel moviesModel) {
                 Intent intent = new Intent(getContext(), DetailsActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("value", moviesModel);
+                bundle.putSerializable(Intent.EXTRA_TEXT, moviesModel);
                 intent.putExtras(bundle);
                 startActivity(intent);
 
