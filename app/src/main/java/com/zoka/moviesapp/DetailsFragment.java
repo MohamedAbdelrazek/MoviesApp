@@ -24,10 +24,11 @@ import butterknife.ButterKnife;
  */
 
 public class DetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<MoviesModel> {
+    private static final int LOADER_ID = 22;
     @BindView(R.id.ratingBar)
     RatingBar zRateView;
     @BindView(R.id.back_drop_path)
-    ImageView BackDropImageView;
+    ImageView zBackDropImageView;
     @BindView(R.id.movie_title)
     TextView zTitleView;
     @BindView(R.id.movie_desc)
@@ -35,10 +36,11 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     @BindView(R.id.release_data)
     TextView zReleaseData;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(22, null, this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Nullable
@@ -46,8 +48,11 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View zRootView = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, zRootView);
+
+
         return zRootView;
     }
+
 
     @Override
     public Loader<MoviesModel> onCreateLoader(int id, Bundle args) {
@@ -81,10 +86,11 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoadFinished(Loader<MoviesModel> loader, MoviesModel moviesModel) {
         zRateView.setRating(Float.parseFloat(moviesModel.getRate()) / 2);
+
         if (moviesModel.getBackDrop() != null) {
-            Picasso.with(null).load(moviesModel.getBackDrop()).placeholder(R.drawable.place_holder).into(BackDropImageView);
+            Picasso.with(null).load(moviesModel.getBackDrop()).placeholder(R.drawable.place_holder).into(zBackDropImageView);
         } else {
-            Picasso.with(null).load(moviesModel.getPosterPath()).into(BackDropImageView);
+            Picasso.with(null).load(moviesModel.getPosterPath()).into(zBackDropImageView);
         }
         zTitleView.setText(moviesModel.getTitle());
         zDescription.setText(moviesModel.getDesc());
