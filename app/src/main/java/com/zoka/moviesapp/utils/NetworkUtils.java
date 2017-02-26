@@ -14,12 +14,19 @@ import okhttp3.Response;
 public class NetworkUtils {
     private static String BASE_URL = "http://api.themoviedb.org/3/movie";
     private static String API_KEY_PARAM = "api_key";
+    private static String REVIEW_PATH = "reviews";
 
 
     public static URL buildQueryParam(String sort_path) throws MalformedURLException {
         Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(sort_path)
                 .query("").appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY).build();
 
+        return new URL(builtUri.toString());
+    }
+
+    public static URL buildQueryReviewParam(String id) throws MalformedURLException {
+        Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(id).appendPath(REVIEW_PATH)
+                .query("").appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY).build();
         return new URL(builtUri.toString());
     }
 

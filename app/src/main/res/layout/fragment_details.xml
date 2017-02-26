@@ -19,8 +19,8 @@
                 android:id="@+id/back_drop_path"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="matrix"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:scaleType="matrix" />
         </RelativeLayout>
 
         <LinearLayout
@@ -33,13 +33,13 @@
                 style="?android:attr/textAppearanceLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/main_header_txt_size"
                 android:layout_marginLeft="@dimen/activity_margin"
                 android:layout_marginTop="@dimen/activity_margin"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/main_header_txt_size"
+                android:textStyle="bold"
 
-               />
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,10 +51,10 @@
                     style="?android:attr/textAppearanceMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sub_header_txt_size"
                     android:layout_marginLeft="@dimen/activity_margin"
                     android:layout_marginTop="@dimen/activity_margin"
-                    android:textColor="@android:color/black" />
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/sub_header_txt_size" />
             </LinearLayout>
 
             <RatingBar
@@ -78,6 +78,31 @@
                 android:textSize="@dimen/sub_header_txt_size" />
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="Reviews:"
+            android:textSize="30sp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/review_recycler"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+      
     </LinearLayout>
+
 
 </ScrollView>

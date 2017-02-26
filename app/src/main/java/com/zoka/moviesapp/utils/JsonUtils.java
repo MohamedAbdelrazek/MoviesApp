@@ -5,6 +5,7 @@ package com.zoka.moviesapp.utils;
  */
 
 import com.zoka.moviesapp.MoviesModel;
+import com.zoka.moviesapp.ReviewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 public class JsonUtils {
     public static ArrayList<MoviesModel> getMoviesData(String jsonString)
             throws JSONException {
-        JSONObject jsonObject=new JSONObject(jsonString);
+        JSONObject jsonObject = new JSONObject(jsonString);
 
         final String MDB_MOVIE_POSTER = "poster_path";
         final String MDB_MOVIE_TITLE = "title";
@@ -74,4 +75,32 @@ public class JsonUtils {
         final String IMG_SIZE = "w780/";
         return BASE_URL + IMG_SIZE + imageUrl;
     }
+
+    public static ArrayList<ReviewModel> JsonReviewParser(String s)
+            throws JSONException {
+        try {
+            JSONObject jsonObject = new JSONObject(s);
+            JSONArray jsonMoviesArray = jsonObject.getJSONArray("results");
+
+            ArrayList<ReviewModel> reviewList = new ArrayList<>();
+            for (int i = 0; i < jsonMoviesArray.length(); i++) {
+                ReviewModel reviewSchema = new ReviewModel();
+                JSONObject jsonObject1 = jsonMoviesArray.getJSONObject(i);
+                String author = jsonObject1.getString("author");
+
+                String content = jsonObject1.getString("content");
+                String url = jsonObject1.getString("url");
+                reviewSchema.setAuthorName(author);
+                reviewSchema.setUrl(url);
+                reviewSchema.setContent(content);
+                reviewList.add(reviewSchema);
+
+            }
+            return reviewList;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

@@ -7,14 +7,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.zoka.moviesapp.Adapters.ReviewAdapter;
+import com.zoka.moviesapp.utils.JsonUtils;
+import com.zoka.moviesapp.utils.NetworkUtils;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,24 +36,29 @@ import butterknife.ButterKnife;
  * Created by Mohamed AbdelraZek on 2/21/2017.
  */
 
-public class DetailsFragment extends Fragment implements LoaderManager.LoaderCallbacks<MoviesModel> {
+public class DetailsFragment extends Fragment {
     private static final int LOADER_ID = 22;
+    private static final int REVIEW_LOADER_ID = 32;
+    private ReviewAdapter mReviewAdapter;
     @BindView(R.id.ratingBar)
-    RatingBar zRateView;
+    RatingBar mRateView;
     @BindView(R.id.back_drop_path)
-    ImageView zBackDropImageView;
+    ImageView mBackDropImage;
     @BindView(R.id.movie_title)
-    TextView zTitleView;
+    TextView mTitleView;
     @BindView(R.id.movie_desc)
-    TextView zDescription;
+    TextView mDescription;
     @BindView(R.id.release_data)
-    TextView zReleaseData;
+    TextView mReleaseData;
+    @BindView(R.id.review_recycler)
+    RecyclerView mReviewRecycler;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        getLoaderManager().initLoader(LOADER_ID, null, moviesLoaderCallbacks);
+        getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewsLoaderCallbacks);
     }
 
     @Nullable
@@ -48,61 +66,115 @@ public class DetailsFragment extends Fragment implements LoaderManager.LoaderCal
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View zRootView = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, zRootView);
+        mReviewAdapter = new ReviewAdapter(getActivity(), new ArrayList<ReviewModel>());
+        mReviewRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mReviewRecycler.setAdapter(mReviewAdapter);
 
 
         return zRootView;
     }
 
+    private LoaderManager.LoaderCallbacks<MoviesModel> moviesLoaderCallbacks = new LoaderManager.LoaderCallbacks<MoviesModel>() {
+        @Override
+        public Loader<MoviesModel> onCreateLoader(int id, Bundle args) {
+            return new AsyncTaskLoader<MoviesModel>(getActivity()) {
+                MoviesModel moviesModel = null;
 
-    @Override
-    public Loader<MoviesModel> onCreateLoader(int id, Bundle args) {
-        return new AsyncTaskLoader<MoviesModel>(getActivity()) {
-            MoviesModel moviesModel;
-
-            @Override
-            protected void onStartLoading() {
-                if (moviesModel == null) {
-                    forceLoad();
-                } else {
-                    deliverResult(moviesModel);
+                @Override
+                protected void onStartLoading() {
+                    if (moviesModel == null) {
+                        forceLoad();
+                    } else {
+                        deliverResult(moviesModel);
+                    }
                 }
-            }
 
-            @Override
-            public void deliverResult(MoviesModel data) {
-                moviesModel = data;
-                super.deliverResult(data);
-            }
+                @Override
+                public void deliverResult(MoviesModel data) {
+                    moviesModel = data;
+                    super.deliverResult(data);
+                }
 
-            @Override
-            public MoviesModel loadInBackground() {
-                Intent intent = getActivity().getIntent();
-                MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
-                return moviesModel;
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<MoviesModel> loader, MoviesModel moviesModel) {
-        zRateView.setRating(Float.parseFloat(moviesModel.getRate()) / 2);
-
-        if (moviesModel.getBackDrop() != null) {
-            Picasso.with(null).load(moviesModel.getBackDrop()).placeholder(R.drawable.place_holder).into(zBackDropImageView);
-        } else {
-            Picasso.with(null).load(moviesModel.getPosterPath()).into(zBackDropImageView);
+                @Override
+                public MoviesModel loadInBackground() {
+                    Intent intent = getActivity().getIntent();
+                    MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
+                    return moviesModel;
+                }
+            };
         }
-        zTitleView.setText(moviesModel.getTitle());
-        zDescription.setText(moviesModel.getDesc());
-        zReleaseData.setText(moviesModel.getDate());
-    }
 
-    @Override
-    public void onLoaderReset(Loader<MoviesModel> loader) {
-        zTitleView.setText("");
-        zDescription.setText("");
-        zReleaseData.setText("");
-        zRateView.setRating(0);
+        @Override
+        public void onLoadFinished(Loader<MoviesModel> loader, MoviesModel moviesModel) {
+            mRateView.setRating(Float.parseFloat(moviesModel.getRate()) / 2);
 
-    }
+            if (moviesModel.getBackDrop() != null) {
+                Picasso.with(null).load(moviesModel.getBackDrop()).placeholder(R.drawable.place_holder).into(mBackDropImage);
+            } else {
+                Picasso.with(null).load(moviesModel.getPosterPath()).into(mBackDropImage);
+            }
+            mTitleView.setText(moviesModel.getTitle());
+            mDescription.setText(moviesModel.getDesc());
+            mReleaseData.setText(moviesModel.getDate());
+        }
+
+        @Override
+        public void onLoaderReset(Loader<MoviesModel> loader) {
+            mTitleView.setText("");
+            mDescription.setText("");
+            mReleaseData.setText("");
+            mRateView.setRating(0);
+
+        }
+
+
+    };
+    private LoaderManager.LoaderCallbacks<ArrayList<ReviewModel>> reviewsLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<ReviewModel>>() {
+
+        @Override
+        public Loader<ArrayList<ReviewModel>> onCreateLoader(int id, Bundle args) {
+            return new AsyncTaskLoader<ArrayList<ReviewModel>>(getActivity()) {
+                @Override
+                protected void onStartLoading() {
+                    forceLoad();
+                }
+
+                @Override
+                public ArrayList<ReviewModel> loadInBackground() {
+                    Intent intent = getActivity().getIntent();
+                    MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
+                    String id = moviesModel.getId();
+                    try {
+                        URL url = NetworkUtils.buildQueryReviewParam(id);
+                        String jsonStr = NetworkUtils.JsonResponse(url);
+                        return JsonUtils.JsonReviewParser(jsonStr);
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            };
+        }
+
+        @Override
+        public void onLoadFinished(Loader<ArrayList<ReviewModel>> loader, ArrayList<ReviewModel> data) {
+
+            if (data.size()>0) {
+                mReviewAdapter.swap(data);
+            }
+            else{
+                Toast.makeText(getActivity(), "No reviews !", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<ArrayList<ReviewModel>> loader) {
+
+        }
+    };
 }

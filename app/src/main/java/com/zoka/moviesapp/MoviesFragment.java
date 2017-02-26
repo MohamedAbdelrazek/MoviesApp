@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.zoka.moviesapp.Adapters.MoviesAdapter;
 import com.zoka.moviesapp.utils.ConstantUtils;
 import com.zoka.moviesapp.utils.JsonUtils;
 import com.zoka.moviesapp.utils.NetworkUtils;
