@@ -1,4 +1,4 @@
-package com.zoka.moviesapp;
+package com.zoka.moviesapp.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.zoka.moviesapp.ClickListener;
+import com.zoka.moviesapp.MoviesModel;
+import com.zoka.moviesapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
