@@ -35,10 +35,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     }
 
     public void swap(ArrayList<MoviesModel> zData) {
-        data.clear();
-        data.addAll(zData);
-        notifyDataSetChanged();
-
+        if (zData != null) {
+            data.clear();
+            data.addAll(zData);
+            notifyDataSetChanged();
+        }
     }
 
     @Override

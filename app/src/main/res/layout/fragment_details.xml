@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none">
+    android:orientation="vertical">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,8 +87,8 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:text="Reviews:"
-            android:visibility="gone"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -103,14 +104,14 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/trailer_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:text="Trailers :"
-            android:visibility="gone"
-            android:id="@+id/trailer_title"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -124,6 +125,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
         </LinearLayout>
-
     </LinearLayout>
+
+
 </ScrollView>
