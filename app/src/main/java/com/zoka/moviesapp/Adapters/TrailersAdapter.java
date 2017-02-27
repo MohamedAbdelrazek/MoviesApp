@@ -35,9 +35,11 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     }
 
     public void swap(ArrayList<TrailerModel> zData) {
-        data.clear();
-        data.addAll(zData);
-        notifyDataSetChanged();
+        if (zData != null) {
+            data.clear();
+            data.addAll(zData);
+            notifyDataSetChanged();
+        }
 
     }
 

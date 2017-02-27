@@ -32,9 +32,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
     }
 
     public void swap(ArrayList<ReviewModel> zData) {
-        data.clear();
-        data.addAll(zData);
-        notifyDataSetChanged();
+        if (zData!=null) {
+            data.clear();
+            data.addAll(zData);
+            notifyDataSetChanged();
+        }
 
     }
 
