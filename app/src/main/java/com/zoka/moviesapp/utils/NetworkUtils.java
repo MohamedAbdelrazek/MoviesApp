@@ -15,6 +15,8 @@ public class NetworkUtils {
     private static String BASE_URL = "http://api.themoviedb.org/3/movie";
     private static String API_KEY_PARAM = "api_key";
     private static String REVIEW_PATH = "reviews";
+    private static String TRAILER_PATH = "videos";
+    public static final String YOUTUBE_BASE = "http://www.youtube.com/watch?v=";
 
 
     public static URL buildQueryParam(String sort_path) throws MalformedURLException {
@@ -26,6 +28,12 @@ public class NetworkUtils {
 
     public static URL buildQueryReviewParam(String id) throws MalformedURLException {
         Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(id).appendPath(REVIEW_PATH)
+                .query("").appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY).build();
+        return new URL(builtUri.toString());
+    }
+
+    public static URL buildQueryTrailerParam(String id) throws MalformedURLException {
+        Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(id).appendPath(TRAILER_PATH)
                 .query("").appendQueryParameter(API_KEY_PARAM, BuildConfig.API_KEY).build();
         return new URL(builtUri.toString());
     }

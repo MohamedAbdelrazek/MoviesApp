@@ -4,8 +4,11 @@ package com.zoka.moviesapp.utils;
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
-import com.zoka.moviesapp.MoviesModel;
-import com.zoka.moviesapp.ReviewModel;
+import android.util.Log;
+
+import com.zoka.moviesapp.Models.MoviesModel;
+import com.zoka.moviesapp.Models.ReviewModel;
+import com.zoka.moviesapp.Models.TrailerModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -96,11 +99,45 @@ public class JsonUtils {
                 reviewList.add(reviewSchema);
 
             }
+            for (ReviewModel r:reviewList) {
+                Log.i("ZOKA",r.getAuthorName());
+            }
             return reviewList;
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static ArrayList<TrailerModel> JsonTrailerParser(String string)
+            throws JSONException {
+        try {
+            //  if (string != null) {
+            ArrayList<TrailerModel> data = new ArrayList<>();
+            JSONObject jsonObject = new JSONObject(string);
+            //Get the instance of JSONArray that contains JSONObjects
+            JSONArray jsonMoviesArray = jsonObject.optJSONArray("results");
+            String key = "";
+            for (int i = 0; i < jsonMoviesArray.length(); i++) {
+                TrailerModel trailerModel = new TrailerModel();
+                JSONObject jsonObject1 = jsonMoviesArray.getJSONObject(i);
+                String type = jsonObject1.optString("type");
+                if (type.equalsIgnoreCase("trailer"))
+                    key = jsonObject1.optString("key");
+                trailerModel.setKey(key);
+                data.add(trailerModel);
+
+            }
+            for (TrailerModel t:data) {
+                Log.i("ZOKA",""+t.getKey());
+
+            }
+            return data;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
 
 }

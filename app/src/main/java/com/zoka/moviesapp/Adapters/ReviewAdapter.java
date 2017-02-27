@@ -7,9 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zoka.moviesapp.ClickListener;
+import com.zoka.moviesapp.Models.ReviewModel;
 import com.zoka.moviesapp.R;
-import com.zoka.moviesapp.ReviewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
     private LayoutInflater inflater;
     private Context context;
     private List<ReviewModel> data;
-    private ClickListener recyclerListener;
 
     public ReviewAdapter(Context context, List<ReviewModel> data) {
         this.context = context;
@@ -57,11 +55,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
 
     }
 
-    public void setRecyclerListener(ClickListener recyclerListener) {
-        this.recyclerListener = recyclerListener;
-
-
-    }
 
     @Override
     public int getItemCount() {

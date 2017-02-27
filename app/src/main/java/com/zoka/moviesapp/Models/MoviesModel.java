@@ -1,4 +1,4 @@
-package com.zoka.moviesapp;
+package com.zoka.moviesapp.Models;
 
 import java.io.Serializable;
 

@@ -15,10 +15,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.Adapters.ReviewAdapter;
+import com.zoka.moviesapp.Adapters.TrailersAdapter;
+import com.zoka.moviesapp.Models.MoviesModel;
+import com.zoka.moviesapp.Models.ReviewModel;
+import com.zoka.moviesapp.Models.TrailerModel;
 import com.zoka.moviesapp.utils.JsonUtils;
 import com.zoka.moviesapp.utils.NetworkUtils;
 
@@ -37,9 +40,11 @@ import butterknife.ButterKnife;
  */
 
 public class DetailsFragment extends Fragment {
-    private static final int LOADER_ID = 22;
-    private static final int REVIEW_LOADER_ID = 32;
+    private static final int LOADER_ID = 20;
+    private static final int REVIEW_LOADER_ID = 30;
+    private static final int TRAILER_LOADER_ID = 40;
     private ReviewAdapter mReviewAdapter;
+    private TrailersAdapter mTrailersAdapter;
     @BindView(R.id.ratingBar)
     RatingBar mRateView;
     @BindView(R.id.back_drop_path)
@@ -52,6 +57,8 @@ public class DetailsFragment extends Fragment {
     TextView mReleaseData;
     @BindView(R.id.review_recycler)
     RecyclerView mReviewRecycler;
+    @BindView(R.id.trailer_recycler)
+    RecyclerView mTrailerRecycler;
 
 
     @Override
@@ -59,6 +66,7 @@ public class DetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ID, null, moviesLoaderCallbacks);
         getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewsLoaderCallbacks);
+        getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
     }
 
     @Nullable
@@ -70,6 +78,9 @@ public class DetailsFragment extends Fragment {
         mReviewRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mReviewRecycler.setAdapter(mReviewAdapter);
 
+        mTrailersAdapter = new TrailersAdapter(getActivity(), new ArrayList<TrailerModel>());
+        mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mTrailerRecycler.setAdapter(mTrailersAdapter);
 
         return zRootView;
     }
@@ -164,16 +175,58 @@ public class DetailsFragment extends Fragment {
         @Override
         public void onLoadFinished(Loader<ArrayList<ReviewModel>> loader, ArrayList<ReviewModel> data) {
 
-            if (data.size()>0) {
+            if (data.size() > 0) {
                 mReviewAdapter.swap(data);
-            }
-            else{
-                Toast.makeText(getActivity(), "No reviews !", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
         public void onLoaderReset(Loader<ArrayList<ReviewModel>> loader) {
+
+        }
+    };
+    private LoaderManager.LoaderCallbacks<ArrayList<TrailerModel>> trailersLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<TrailerModel>>() {
+
+        @Override
+        public Loader<ArrayList<TrailerModel>> onCreateLoader(int id, Bundle args) {
+            return new AsyncTaskLoader<ArrayList<TrailerModel>>(getActivity()) {
+                @Override
+                protected void onStartLoading() {
+                    forceLoad();
+                }
+
+                @Override
+                public ArrayList<TrailerModel> loadInBackground() {
+                    Intent intent = getActivity().getIntent();
+                    MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
+                    String id = moviesModel.getId();
+                    try {
+                        URL url = NetworkUtils.buildQueryTrailerParam(id);
+                        String jsonStr = NetworkUtils.JsonResponse(url);
+                        return JsonUtils.JsonTrailerParser(jsonStr);
+
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+            };
+        }
+
+        @Override
+        public void onLoadFinished(Loader<ArrayList<TrailerModel>> loader, ArrayList<TrailerModel> data) {
+
+            if (data.size() > 0) {
+                mTrailersAdapter.swap(data);
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<ArrayList<TrailerModel>> loader) {
 
         }
     };

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.ClickListener;
-import com.zoka.moviesapp.MoviesModel;
+import com.zoka.moviesapp.Models.MoviesModel;
 import com.zoka.moviesapp.R;
 
 import java.util.ArrayList;
