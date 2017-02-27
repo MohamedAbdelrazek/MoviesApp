@@ -122,14 +122,17 @@ public class JsonUtils {
                 TrailerModel trailerModel = new TrailerModel();
                 JSONObject jsonObject1 = jsonMoviesArray.getJSONObject(i);
                 String type = jsonObject1.optString("type");
-                if (type.equalsIgnoreCase("trailer"))
+                if (type.equalsIgnoreCase("trailer")) {
                     key = jsonObject1.optString("key");
-                trailerModel.setKey(key);
-                data.add(trailerModel);
+                    trailerModel.setKey(key);
+                    data.add(trailerModel);
+                }
+
 
             }
+            Log.i("ZOKA","Trailer Size"+data.size());
             for (TrailerModel t:data) {
-                Log.i("ZOKA",""+t.getKey());
+                Log.i("ZOKA","Trailer id :"+t.getKey());
 
             }
             return data;

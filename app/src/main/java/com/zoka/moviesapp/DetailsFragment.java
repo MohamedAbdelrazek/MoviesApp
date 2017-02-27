@@ -59,6 +59,10 @@ public class DetailsFragment extends Fragment {
     RecyclerView mReviewRecycler;
     @BindView(R.id.trailer_recycler)
     RecyclerView mTrailerRecycler;
+    @BindView(R.id.review_title)
+    TextView mReviewTitle;
+    @BindView(R.id.trailer_title)
+    TextView mTrailerTitle;
 
 
     @Override
@@ -176,6 +180,7 @@ public class DetailsFragment extends Fragment {
         public void onLoadFinished(Loader<ArrayList<ReviewModel>> loader, ArrayList<ReviewModel> data) {
 
             if (data.size() > 0) {
+                mReviewTitle.setVisibility(View.VISIBLE);
                 mReviewAdapter.swap(data);
             }
         }
@@ -221,7 +226,9 @@ public class DetailsFragment extends Fragment {
         public void onLoadFinished(Loader<ArrayList<TrailerModel>> loader, ArrayList<TrailerModel> data) {
 
             if (data.size() > 0) {
+                mTrailerTitle.setVisibility(View.VISIBLE);
                 mTrailersAdapter.swap(data);
+
             }
         }
 
