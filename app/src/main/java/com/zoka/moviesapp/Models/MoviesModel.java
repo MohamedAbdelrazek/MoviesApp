@@ -1,12 +1,13 @@
 package com.zoka.moviesapp.Models;
 
-import java.io.Serializable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
-public class MoviesModel implements Serializable {
+public class MoviesModel implements Parcelable {
     private String Title;
     private String Desc;
     private String PosterPath;
@@ -14,6 +15,29 @@ public class MoviesModel implements Serializable {
     private String BackDrop;
     private String Rate;
     private String id;
+    public MoviesModel(){}
+
+    protected MoviesModel(Parcel in) {
+        Title = in.readString();
+        Desc = in.readString();
+        PosterPath = in.readString();
+        Date = in.readString();
+        BackDrop = in.readString();
+        Rate = in.readString();
+        id = in.readString();
+    }
+
+    public static final Creator<MoviesModel> CREATOR = new Creator<MoviesModel>() {
+        @Override
+        public MoviesModel createFromParcel(Parcel in) {
+            return new MoviesModel(in);
+        }
+
+        @Override
+        public MoviesModel[] newArray(int size) {
+            return new MoviesModel[size];
+        }
+    };
 
     public String getTitle() {
         return Title;
@@ -69,5 +93,23 @@ public class MoviesModel implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(Title);
+        dest.writeString(Desc);
+        dest.writeString(PosterPath);
+        dest.writeString(Date);
+        dest.writeString(BackDrop);
+        dest.writeString(Rate);
+        dest.writeString(id);
+
+
     }
 }

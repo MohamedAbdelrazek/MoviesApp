@@ -78,6 +78,7 @@
                 android:textSize="@dimen/sub_header_txt_size" />
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/trailer_title"
             android:layout_width="match_parent"

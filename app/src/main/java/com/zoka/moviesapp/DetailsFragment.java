@@ -91,7 +91,7 @@ public class DetailsFragment extends Fragment {
 
     private String getID() {
         Intent intent = getActivity().getIntent();
-        MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
+        MoviesModel moviesModel = (MoviesModel) intent.getParcelableExtra(Intent.EXTRA_TEXT);
         String id = moviesModel.getId();
         return id;
     }
@@ -120,7 +120,7 @@ public class DetailsFragment extends Fragment {
                 @Override
                 public MoviesModel loadInBackground() {
                     Intent intent = getActivity().getIntent();
-                    MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
+                    MoviesModel moviesModel = intent.getParcelableExtra(Intent.EXTRA_TEXT);
                     return moviesModel;
                 }
             };
