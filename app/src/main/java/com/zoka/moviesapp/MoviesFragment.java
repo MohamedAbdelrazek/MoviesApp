@@ -48,6 +48,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @BindView(R.id.recycler_view_id)
     RecyclerView zRecycler;
     private String mSortType = ConstantUtils.POPULAR;
+    private int scrollPosition;
 
     public String getSortType() {
         return mSortType;
@@ -73,6 +74,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
         adapter = new MoviesAdapter(getActivity(), new ArrayList<MoviesModel>());
         zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
+        zRecycler.setHasFixedSize(true);
         zRecycler.setAdapter(adapter);
         adapter.setRecyclerListener(new ClickListener() {
             @Override

@@ -7,8 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.Models.TrailerModel;
 import com.zoka.moviesapp.R;
 import com.zoka.moviesapp.utils.NetworkUtils;
@@ -55,7 +56,9 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     @Override
     public void onBindViewHolder(TrailerHolder holder, int position) {
         TrailerModel currentTrailerData = data.get(position);
-        holder.trailerNumber.setText("Trailer " + (position + 1));
+        Picasso.with(context)
+                .load("http://img.youtube.com/vi/"+data.get(position).getKey()+"/0.jpg")
+                .into(holder.trailerImage);
 
 
     }
@@ -67,8 +70,8 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
     public class TrailerHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.txt_View_trailer_number)
-        TextView trailerNumber;
+        @BindView(R.id.image_thumb)
+        ImageView trailerImage;
 
         public TrailerHolder(View view) {
             super(view);
@@ -86,4 +89,5 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
 
         }
     }
+
 }

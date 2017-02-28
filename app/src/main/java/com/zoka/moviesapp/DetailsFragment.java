@@ -83,7 +83,7 @@ public class DetailsFragment extends Fragment {
         mReviewRecycler.setAdapter(mReviewAdapter);
 
         mTrailersAdapter = new TrailersAdapter(getActivity(), new ArrayList<TrailerModel>());
-        mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mTrailerRecycler.setAdapter(mTrailersAdapter);
 
         return zRootView;
