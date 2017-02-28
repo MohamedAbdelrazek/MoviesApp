@@ -89,6 +89,13 @@ public class DetailsFragment extends Fragment {
         return zRootView;
     }
 
+    private String getID() {
+        Intent intent = getActivity().getIntent();
+        MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
+        String id = moviesModel.getId();
+        return id;
+    }
+
     private LoaderManager.LoaderCallbacks<MoviesModel> moviesLoaderCallbacks = new LoaderManager.LoaderCallbacks<MoviesModel>() {
         @Override
         public Loader<MoviesModel> onCreateLoader(int id, Bundle args) {
@@ -149,16 +156,26 @@ public class DetailsFragment extends Fragment {
         @Override
         public Loader<ArrayList<ReviewModel>> onCreateLoader(int id, Bundle args) {
             return new AsyncTaskLoader<ArrayList<ReviewModel>>(getActivity()) {
+                ArrayList<ReviewModel> reviewModels = null;
+
                 @Override
                 protected void onStartLoading() {
-                    forceLoad();
+                    if (reviewModels == null) {
+                        forceLoad();
+                    } else {
+                        deliverResult(reviewModels);
+                    }
+                }
+
+                @Override
+                public void deliverResult(ArrayList<ReviewModel> data) {
+                    reviewModels = data;
+                    super.deliverResult(data);
                 }
 
                 @Override
                 public ArrayList<ReviewModel> loadInBackground() {
-                    Intent intent = getActivity().getIntent();
-                    MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
-                    String id = moviesModel.getId();
+                    String id = getID();
                     try {
                         URL url = NetworkUtils.buildQueryReviewParam(id);
                         String jsonStr = NetworkUtils.JsonResponse(url);
@@ -195,16 +212,27 @@ public class DetailsFragment extends Fragment {
         @Override
         public Loader<ArrayList<TrailerModel>> onCreateLoader(int id, Bundle args) {
             return new AsyncTaskLoader<ArrayList<TrailerModel>>(getActivity()) {
+                ArrayList<TrailerModel> trailerModels = null;
+
                 @Override
                 protected void onStartLoading() {
-                    forceLoad();
+                    if (trailerModels != null) {
+                        deliverResult(trailerModels);
+                    } else {
+                        forceLoad();
+                    }
+                }
+
+                @Override
+                public void deliverResult(ArrayList<TrailerModel> data) {
+                    trailerModels = data;
+                    super.deliverResult(data);
                 }
 
                 @Override
                 public ArrayList<TrailerModel> loadInBackground() {
-                    Intent intent = getActivity().getIntent();
-                    MoviesModel moviesModel = (MoviesModel) intent.getSerializableExtra(Intent.EXTRA_TEXT);
-                    String id = moviesModel.getId();
+
+                    String id = getID();
                     try {
                         URL url = NetworkUtils.buildQueryTrailerParam(id);
                         String jsonStr = NetworkUtils.JsonResponse(url);

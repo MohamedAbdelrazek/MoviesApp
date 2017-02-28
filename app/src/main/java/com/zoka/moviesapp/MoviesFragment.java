@@ -130,9 +130,21 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<ArrayList<MoviesModel>> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<MoviesModel>>(getActivity()) {
+            ArrayList<MoviesModel> moviesModels = null;
+
             @Override
             protected void onStartLoading() {
-                forceLoad();
+                if (moviesModels != null) {
+                    deliverResult(moviesModels);
+                } else {
+                    forceLoad();
+                }
+            }
+
+            @Override
+            public void deliverResult(ArrayList<MoviesModel> data) {
+                moviesModels = data;
+                super.deliverResult(data);
             }
 
             @Override
@@ -171,6 +183,5 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         getLoaderManager().restartLoader(LOADER_ID, null, this);
-
     }
 }
