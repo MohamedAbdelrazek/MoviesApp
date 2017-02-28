@@ -48,16 +48,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @BindView(R.id.recycler_view_id)
     RecyclerView zRecycler;
     private String mSortType = ConstantUtils.POPULAR;
-    private int scrollPosition;
-
-    public String getSortType() {
-        return mSortType;
-    }
-
-    public void setSortType(String sortType) {
-        mSortType = sortType;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,21 +122,13 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<ArrayList<MoviesModel>> onCreateLoader(int id, final Bundle args) {
         return new AsyncTaskLoader<ArrayList<MoviesModel>>(getActivity()) {
-            ArrayList<MoviesModel> moviesModels = null;
 
             @Override
             protected void onStartLoading() {
-                if (moviesModels != null) {
-                    deliverResult(moviesModels);
-                } else {
-                    forceLoad();
-                }
-            }
 
-            @Override
-            public void deliverResult(ArrayList<MoviesModel> data) {
-                moviesModels = data;
-                super.deliverResult(data);
+
+                    forceLoad();
+
             }
 
             @Override
