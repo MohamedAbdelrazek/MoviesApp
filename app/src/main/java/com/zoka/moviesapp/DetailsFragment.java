@@ -78,12 +78,12 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View zRootView = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, zRootView);
-        mReviewAdapter = new ReviewAdapter(getActivity(), new ArrayList<ReviewModel>());
-        mReviewRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mReviewAdapter = new ReviewAdapter(getContext(), new ArrayList<ReviewModel>());
+        mReviewRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mReviewRecycler.setAdapter(mReviewAdapter);
 
         mTrailersAdapter = new TrailersAdapter(getActivity(), new ArrayList<TrailerModel>());
-        mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mTrailerRecycler.setAdapter(mTrailersAdapter);
 
         return zRootView;

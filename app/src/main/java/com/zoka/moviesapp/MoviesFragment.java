@@ -1,7 +1,9 @@
 package com.zoka.moviesapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -23,6 +25,7 @@ import com.zoka.moviesapp.Models.MoviesModel;
 import com.zoka.moviesapp.utils.ConstantUtils;
 import com.zoka.moviesapp.utils.JsonUtils;
 import com.zoka.moviesapp.utils.NetworkUtils;
+import com.zoka.moviesapp.utils.PreferenceUtilities;
 
 import org.json.JSONException;
 
@@ -38,7 +41,7 @@ import butterknife.ButterKnife;
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
-public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<MoviesModel>> {
+public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<MoviesModel>>, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String SORT_TYPE_EXTRA = "sort";
     private static final int LOADER_ID = 22;
     MoviesAdapter adapter;
@@ -82,10 +85,18 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
             }
         });
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.unregisterOnSharedPreferenceChangeListener(this);
+    }
 
     private int calculateNoOfColumns() {
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
@@ -104,15 +115,12 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.top_rated_id) {
-            setSortType(ConstantUtils.TOP_RATED);
-            getLoaderManager().restartLoader(LOADER_ID,null,this);
+            PreferenceUtilities.setSortType(getContext(), PreferenceUtilities.TOP_RATED);
             return true;
         } else if (id == R.id.popular_id) {
-            setSortType(ConstantUtils.POPULAR);
-            getLoaderManager().restartLoader(LOADER_ID,null,this);
+            PreferenceUtilities.setSortType(getContext(), PreferenceUtilities.POPULAR);
             return true;
-        }
-        else if (id == R.id.favourite_id) {
+        } else if (id == R.id.favourite_id) {
             Toast.makeText(getActivity(), "Favourite List no ready Yet!", Toast.LENGTH_SHORT).show();
             return true;
         }
@@ -131,7 +139,8 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
             public ArrayList<MoviesModel> loadInBackground() {
 
                 try {
-                    URL url = NetworkUtils.buildQueryParam(getSortType());
+                    String sortType = PreferenceUtilities.getSortType(getContext());
+                    URL url = NetworkUtils.buildQueryParam(sortType);
 
                     String jsonRes = NetworkUtils.JsonResponse(url);
                     return JsonUtils.getMoviesData(jsonRes);
@@ -156,6 +165,12 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public void onLoaderReset(Loader<ArrayList<MoviesModel>> loader) {
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
 
     }
 }
