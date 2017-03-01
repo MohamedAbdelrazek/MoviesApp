@@ -6,7 +6,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.zoka.moviesapp.data.MoviesContract;
-import com.zoka.moviesapp.utils.JsonTest;
+import com.zoka.moviesapp.utils.JsonUtils;
 import com.zoka.moviesapp.utils.NetworkUtils;
 import com.zoka.moviesapp.utils.PreferenceUtilities;
 
@@ -32,8 +32,12 @@ public class MoviesSyncTask {
             //delete all the data
             // int del = contentResolver.delete(MoviesContract.MoviesEntry.CONTENT_URI, null, null);
             //Log.i("ZOKA", "deleted rows =" + del);
+
+            //Storing Popular Movies .
             StoreMoviesData(PreferenceUtilities.POPULAR);
+            //Storing Top rated Movies .
             StoreMoviesData(PreferenceUtilities.TOP_RATED);
+
 
 
         } catch (Exception e) {
@@ -48,7 +52,7 @@ public class MoviesSyncTask {
         try {
             url = NetworkUtils.buildQueryParam(sortType);
             String jsonRes = NetworkUtils.JsonResponse(url);
-            ContentValues[] data = JsonTest.getMoviesData(jsonRes, sortType);
+            ContentValues[] data = JsonUtils.getMoviesData(jsonRes, sortType);
             if (data != null && data.length > 0) {
                 int inst = contentResolver.bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, data);
                 Log.i("ZOKA", "inserted rows =" + inst);

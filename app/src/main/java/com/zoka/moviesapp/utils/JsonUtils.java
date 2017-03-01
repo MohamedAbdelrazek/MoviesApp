@@ -4,6 +4,8 @@ package com.zoka.moviesapp.utils;
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
+import android.content.ContentValues;
+
 import com.zoka.moviesapp.models.MoviesModel;
 import com.zoka.moviesapp.models.ReviewModel;
 import com.zoka.moviesapp.models.TrailerModel;
@@ -14,9 +16,20 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static com.zoka.moviesapp.data.MoviesContract.MoviesEntry.COLUMN_BACK_DROP_PATH;
+import static com.zoka.moviesapp.data.MoviesContract.MoviesEntry.COLUMN_DATE;
+import static com.zoka.moviesapp.data.MoviesContract.MoviesEntry.COLUMN_DESCRIPTION;
+import static com.zoka.moviesapp.data.MoviesContract.MoviesEntry.COLUMN_ID;
+import static com.zoka.moviesapp.data.MoviesContract.MoviesEntry.COLUMN_POSTER_PATH;
+import static com.zoka.moviesapp.data.MoviesContract.MoviesEntry.COLUMN_RATE;
+import static com.zoka.moviesapp.data.MoviesContract.MoviesEntry.COLUMN_SORT_TYPE;
+import static com.zoka.moviesapp.data.MoviesContract.MoviesEntry.COLUMN_TITLE;
+
 public class JsonUtils {
-    public static ArrayList<MoviesModel> getMoviesData(String jsonString)
+    public static ContentValues[] getMoviesData(String jsonString, String sortType)
             throws JSONException {
+
+        ContentValues[] contentValues;
         JSONObject jsonObject = new JSONObject(jsonString);
 
         final String MDB_MOVIE_POSTER = "poster_path";
@@ -39,8 +52,11 @@ public class JsonUtils {
         ArrayList<MoviesModel> MoviesList = new ArrayList<>();
 
         JSONArray movieArray = jsonObject.getJSONArray(results);
+        contentValues = new ContentValues[movieArray.length()];
+
 
         for (int i = 0; i < movieArray.length(); i++) {
+            ContentValues values = new ContentValues();
 
             MoviesModel movieModel = new MoviesModel();
             JSONObject MoviesObject = movieArray.getJSONObject(i);
@@ -51,19 +67,18 @@ public class JsonUtils {
             Description = MoviesObject.getString(MDB_MOVIE_DESC);
             Rate = MoviesObject.getString(MDB_MOVIE_RATE);
             id = MoviesObject.getString(MDB_ID);
-
+            values.put(COLUMN_SORT_TYPE, sortType);
+            values.put(COLUMN_ID, id);
+            values.put(COLUMN_BACK_DROP_PATH, BackDropPhoto);
+            values.put(COLUMN_POSTER_PATH, PosterPathPhoto);
+            values.put(COLUMN_TITLE, Title);
+            values.put(COLUMN_DESCRIPTION, Description);
+            values.put(COLUMN_RATE, Rate);
+            values.put(COLUMN_DATE, Date);
+            contentValues[i] = values;
             //===============================================================================================
-            movieModel.setTitle(Title);
-            movieModel.setDate(Date);
-            movieModel.setDesc(Description);
-            movieModel.setRate(Rate);
-            movieModel.setId(id);
-            movieModel.setPosterPath(PosterPathPhoto);
-            movieModel.setBackDrop(BackDropPhoto);
-
-            MoviesList.add(movieModel);
         }
-        return MoviesList;
+        return contentValues;
     }
 
     private static String FormatPosterImage(String imageUrl) {

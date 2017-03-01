@@ -107,8 +107,6 @@ public class DetailsFragment extends Fragment {
                             selection,
                             selectionArg,
                             null);
-
-
                 }
             };
         }

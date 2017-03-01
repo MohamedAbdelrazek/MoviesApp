@@ -19,9 +19,6 @@ public class MoviesProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     static final int CODE_MOVIES = 100;
-    static final int MOVIES_DETAILS = 101;
-    static final int TRAILERS = 200;
-    static final int REVIEWS = 300;
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
