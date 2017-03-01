@@ -28,6 +28,11 @@
                 android:value=".MainActivity"></meta-data>
 
         </activity>
+
+        <provider
+            android:name=".data.MoviesProvider"
+            android:authorities="com.zoka.moviesapp"
+            android:exported="false"></provider>
     </application>
 
 </manifest>
