@@ -1,5 +1,6 @@
 package com.zoka.moviesapp;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -33,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
-public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,SharedPreferences.OnSharedPreferenceChangeListener {
+public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String SORT_TYPE_EXTRA = "sort";
     private static final int LOADER_ID = 22;
     MoviesAdapter adapter;
@@ -62,8 +63,8 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         Stetho.initializeWithDefaults(getContext());
         adapter = new MoviesAdapter(getContext(), new ClickListener() {
             @Override
-            public void OnItemClicked(String MovieId) {
-                Toast.makeText(getContext(), ""+MovieId, Toast.LENGTH_SHORT).show();
+            public void OnItemClicked(String movieId) {
+                startActivity(new Intent(getContext(), DetailsActivity.class).putExtra(Intent.EXTRA_TEXT, movieId));
 
             }
         });
