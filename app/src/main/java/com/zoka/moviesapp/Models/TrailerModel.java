@@ -1,4 +1,4 @@
-package com.zoka.moviesapp.Models;
+package com.zoka.moviesapp.models;
 
 /**
  * Created by Mohamed AbdelraZek on 2/27/2017.
@@ -7,6 +7,15 @@ package com.zoka.moviesapp.Models;
 public class TrailerModel {
 
     private String key;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getKey() {
         return key;

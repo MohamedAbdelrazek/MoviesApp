@@ -2,7 +2,7 @@ package com.zoka.moviesapp;
 
 import android.view.View;
 
-import com.zoka.moviesapp.Models.MoviesModel;
+import com.zoka.moviesapp.models.MoviesModel;
 
 /**
  * Created by Mohamed AbdelraZek on 2/21/2017.

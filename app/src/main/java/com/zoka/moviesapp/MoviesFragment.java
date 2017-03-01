@@ -20,9 +20,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.zoka.moviesapp.Adapters.MoviesAdapter;
-import com.zoka.moviesapp.Models.MoviesModel;
-import com.zoka.moviesapp.utils.ConstantUtils;
+import com.facebook.stetho.Stetho;
+import com.zoka.moviesapp.adapters.MoviesAdapter;
+import com.zoka.moviesapp.models.MoviesModel;
 import com.zoka.moviesapp.utils.JsonUtils;
 import com.zoka.moviesapp.utils.NetworkUtils;
 import com.zoka.moviesapp.utils.PreferenceUtilities;
@@ -47,7 +47,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     MoviesAdapter adapter;
     @BindView(R.id.recycler_view_id)
     RecyclerView zRecycler;
-    private String mSortType = ConstantUtils.POPULAR;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +61,8 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, view);
-
+        //for showing data base structure>
+        Stetho.initializeWithDefaults(getContext());
         adapter = new MoviesAdapter(getActivity(), new ArrayList<MoviesModel>());
         zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
         zRecycler.setHasFixedSize(true);
@@ -127,7 +128,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
             protected void onStartLoading() {
 
 
-                    forceLoad();
+                forceLoad();
 
             }
 

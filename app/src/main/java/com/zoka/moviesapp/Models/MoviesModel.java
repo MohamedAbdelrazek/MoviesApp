@@ -1,4 +1,4 @@
-package com.zoka.moviesapp.Models;
+package com.zoka.moviesapp.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

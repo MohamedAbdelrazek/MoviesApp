@@ -1,4 +1,4 @@
-package com.zoka.moviesapp.Adapters;
+package com.zoka.moviesapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.zoka.moviesapp.Models.TrailerModel;
 import com.zoka.moviesapp.R;
+import com.zoka.moviesapp.models.TrailerModel;
 import com.zoka.moviesapp.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -57,10 +57,14 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
     public void onBindViewHolder(TrailerHolder holder, int position) {
         TrailerModel currentTrailerData = data.get(position);
         Picasso.with(context)
-                .load("http://img.youtube.com/vi/"+data.get(position).getKey()+"/0.jpg")
+                .load(ConstructThumbnailUrl(currentTrailerData.getKey()))
                 .into(holder.trailerImage);
 
 
+    }
+
+    private static String ConstructThumbnailUrl(String key) {
+        return "http://img.youtube.com/vi/" + key + "/0.jpg";
     }
 
     @Override

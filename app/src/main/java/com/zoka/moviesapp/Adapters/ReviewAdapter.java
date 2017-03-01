@@ -1,4 +1,4 @@
-package com.zoka.moviesapp.Adapters;
+package com.zoka.moviesapp.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zoka.moviesapp.Models.ReviewModel;
+import com.zoka.moviesapp.models.ReviewModel;
 import com.zoka.moviesapp.R;
 
 import java.util.ArrayList;

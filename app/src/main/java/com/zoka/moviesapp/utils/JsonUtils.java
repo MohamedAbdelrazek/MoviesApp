@@ -4,11 +4,9 @@ package com.zoka.moviesapp.utils;
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
-import android.util.Log;
-
-import com.zoka.moviesapp.Models.MoviesModel;
-import com.zoka.moviesapp.Models.ReviewModel;
-import com.zoka.moviesapp.Models.TrailerModel;
+import com.zoka.moviesapp.models.MoviesModel;
+import com.zoka.moviesapp.models.ReviewModel;
+import com.zoka.moviesapp.models.TrailerModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,14 +43,14 @@ public class JsonUtils {
         for (int i = 0; i < movieArray.length(); i++) {
 
             MoviesModel movieModel = new MoviesModel();
-            JSONObject jsonObject1 = movieArray.getJSONObject(i);
-            BackDropPhoto = FormatBackDropImage(jsonObject1.getString(MDB_MOVIE_BACKDROP_PHOTO));
-            PosterPathPhoto = FormatPosterImage(jsonObject1.getString(MDB_MOVIE_POSTER));
-            Title = jsonObject1.getString(MDB_MOVIE_TITLE);
-            Date = jsonObject1.getString(MDB_MOVIE_DATE);
-            Description = jsonObject1.getString(MDB_MOVIE_DESC);
-            Rate = jsonObject1.getString(MDB_MOVIE_RATE);
-            id = jsonObject1.getString(MDB_ID);
+            JSONObject MoviesObject = movieArray.getJSONObject(i);
+            BackDropPhoto = FormatBackDropImage(MoviesObject.getString(MDB_MOVIE_BACKDROP_PHOTO));
+            PosterPathPhoto = FormatPosterImage(MoviesObject.getString(MDB_MOVIE_POSTER));
+            Title = MoviesObject.getString(MDB_MOVIE_TITLE);
+            Date = MoviesObject.getString(MDB_MOVIE_DATE);
+            Description = MoviesObject.getString(MDB_MOVIE_DESC);
+            Rate = MoviesObject.getString(MDB_MOVIE_RATE);
+            id = MoviesObject.getString(MDB_ID);
 
             //===============================================================================================
             movieModel.setTitle(Title);
@@ -62,6 +60,7 @@ public class JsonUtils {
             movieModel.setId(id);
             movieModel.setPosterPath(PosterPathPhoto);
             movieModel.setBackDrop(BackDropPhoto);
+
             MoviesList.add(movieModel);
         }
         return MoviesList;
@@ -84,24 +83,23 @@ public class JsonUtils {
         try {
             JSONObject jsonObject = new JSONObject(s);
             JSONArray jsonMoviesArray = jsonObject.getJSONArray("results");
-
+            String id = jsonObject.optString("id");
             ArrayList<ReviewModel> reviewList = new ArrayList<>();
             for (int i = 0; i < jsonMoviesArray.length(); i++) {
-                ReviewModel reviewSchema = new ReviewModel();
+                ReviewModel reviewModel = new ReviewModel();
                 JSONObject jsonObject1 = jsonMoviesArray.getJSONObject(i);
                 String author = jsonObject1.getString("author");
 
                 String content = jsonObject1.getString("content");
                 String url = jsonObject1.getString("url");
-                reviewSchema.setAuthorName(author);
-                reviewSchema.setUrl(url);
-                reviewSchema.setContent(content);
-                reviewList.add(reviewSchema);
+                reviewModel.setAuthorName(author);
+                reviewModel.setUrl(url);
+                reviewModel.setId(id);
+                reviewModel.setContent(content);
+                reviewList.add(reviewModel);
 
             }
-            for (ReviewModel r:reviewList) {
-                Log.i("ZOKA",r.getAuthorName());
-            }
+
             return reviewList;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -112,11 +110,12 @@ public class JsonUtils {
     public static ArrayList<TrailerModel> JsonTrailerParser(String string)
             throws JSONException {
         try {
-            //  if (string != null) {
+
             ArrayList<TrailerModel> data = new ArrayList<>();
             JSONObject jsonObject = new JSONObject(string);
             //Get the instance of JSONArray that contains JSONObjects
             JSONArray jsonMoviesArray = jsonObject.optJSONArray("results");
+            String id = jsonObject.optString("id");
             String key = "";
             for (int i = 0; i < jsonMoviesArray.length(); i++) {
                 TrailerModel trailerModel = new TrailerModel();
@@ -125,15 +124,9 @@ public class JsonUtils {
                 if (type.equalsIgnoreCase("trailer")) {
                     key = jsonObject1.optString("key");
                     trailerModel.setKey(key);
+                    trailerModel.setId(id);
                     data.add(trailerModel);
                 }
-
-
-            }
-            Log.i("ZOKA","Trailer Size"+data.size());
-            for (TrailerModel t:data) {
-                Log.i("ZOKA","Trailer id :"+t.getKey());
-
             }
             return data;
         } catch (JSONException e) {
@@ -142,5 +135,6 @@ public class JsonUtils {
         }
 
     }
+
 
 }

@@ -17,11 +17,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.zoka.moviesapp.Adapters.ReviewAdapter;
-import com.zoka.moviesapp.Adapters.TrailersAdapter;
-import com.zoka.moviesapp.Models.MoviesModel;
-import com.zoka.moviesapp.Models.ReviewModel;
-import com.zoka.moviesapp.Models.TrailerModel;
+import com.zoka.moviesapp.adapters.ReviewAdapter;
+import com.zoka.moviesapp.adapters.TrailersAdapter;
+import com.zoka.moviesapp.models.MoviesModel;
+import com.zoka.moviesapp.models.ReviewModel;
+import com.zoka.moviesapp.models.TrailerModel;
 import com.zoka.moviesapp.utils.JsonUtils;
 import com.zoka.moviesapp.utils.NetworkUtils;
 
