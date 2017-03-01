@@ -1,6 +1,5 @@
 package com.zoka.moviesapp.data;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
@@ -24,7 +23,7 @@ public class MoviesContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_MOVIES)
                 .build();
-
+        public static final String COLUMN_SORT_TYPE = "sort";
         public static final String TABLE_NAME = "movies";
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_TITLE = "title";
@@ -33,7 +32,6 @@ public class MoviesContract {
         public static final String COLUMN_BACK_DROP_PATH = "back_drop";
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_RATE = "rate";
-        public static final String CONTENT_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIES;
 
 
     }

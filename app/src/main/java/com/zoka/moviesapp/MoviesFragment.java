@@ -1,7 +1,7 @@
 package com.zoka.moviesapp;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -22,17 +22,9 @@ import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.zoka.moviesapp.adapters.MoviesAdapter;
-import com.zoka.moviesapp.models.MoviesModel;
-import com.zoka.moviesapp.utils.JsonUtils;
-import com.zoka.moviesapp.utils.NetworkUtils;
+import com.zoka.moviesapp.data.MoviesContract;
+import com.zoka.moviesapp.sync.MoviesSyncUtils;
 import com.zoka.moviesapp.utils.PreferenceUtilities;
-
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,18 +33,22 @@ import butterknife.ButterKnife;
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
-public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<ArrayList<MoviesModel>>, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String SORT_TYPE_EXTRA = "sort";
     private static final int LOADER_ID = 22;
     MoviesAdapter adapter;
     @BindView(R.id.recycler_view_id)
     RecyclerView zRecycler;
+    public static final String[] Movies_PROJECTION = {
+            MoviesContract.MoviesEntry.COLUMN_POSTER_PATH,
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+        MoviesSyncUtils.initialize(getContext());
 
     }
 
@@ -63,21 +59,10 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         ButterKnife.bind(this, view);
         //for showing data base structure>
         Stetho.initializeWithDefaults(getContext());
-        adapter = new MoviesAdapter(getActivity(), new ArrayList<MoviesModel>());
+        adapter = new MoviesAdapter(getContext());
         zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
         zRecycler.setHasFixedSize(true);
         zRecycler.setAdapter(adapter);
-        adapter.setRecyclerListener(new ClickListener() {
-            @Override
-            public void OnItemClicked(View v, MoviesModel moviesModel) {
-                Intent intent = new Intent(getContext(), DetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(Intent.EXTRA_TEXT, moviesModel);
-                intent.putExtras(bundle);
-                startActivity(intent);
-
-            }
-        });
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.registerOnSharedPreferenceChangeListener(this);
 
@@ -120,54 +105,46 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public Loader<ArrayList<MoviesModel>> onCreateLoader(int id, final Bundle args) {
-        return new AsyncTaskLoader<ArrayList<MoviesModel>>(getActivity()) {
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+
+        return new AsyncTaskLoader<Cursor>(getContext()) {
             @Override
             protected void onStartLoading() {
-
-
                 forceLoad();
-
             }
 
             @Override
-            public ArrayList<MoviesModel> loadInBackground() {
+            public Cursor loadInBackground() {
+                String selection = MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + "= ?";
+                String[] selectionArg = {PreferenceUtilities.getSortType(getContext())};
+                return getContext().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+                        Movies_PROJECTION,
+                        selection,
+                        selectionArg,
+                        null);
 
-                try {
-                    String sortType = PreferenceUtilities.getSortType(getContext());
-                    URL url = NetworkUtils.buildQueryParam(sortType);
 
-                    String jsonRes = NetworkUtils.JsonResponse(url);
-                    ArrayList<MoviesModel> data = JsonUtils.getMoviesData(jsonRes);
-                    return data;
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                return null;
             }
         };
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<MoviesModel>> loader, ArrayList<MoviesModel> data) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swap(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<ArrayList<MoviesModel>> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {
+        adapter.swap(null);
 
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 }

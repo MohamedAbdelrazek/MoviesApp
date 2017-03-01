@@ -1,7 +1,9 @@
 package com.zoka.moviesapp.adapters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.ClickListener;
-import com.zoka.moviesapp.models.MoviesModel;
 import com.zoka.moviesapp.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.zoka.moviesapp.data.MoviesContract;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,21 +24,18 @@ import butterknife.ButterKnife;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
     private LayoutInflater inflater;
     private Context context;
-    private List<MoviesModel> data;
+    private Cursor mCursor;
     private ClickListener recyclerListener;
 
-    public MoviesAdapter(Context context, List<MoviesModel> data) {
+    public MoviesAdapter(Context context) {
         this.context = context;
-        this.data = data;
         inflater = LayoutInflater.from(context);
     }
 
-    public void swap(ArrayList<MoviesModel> zData) {
-        if (zData != null) {
-            data.clear();
-            data.addAll(zData);
-            notifyDataSetChanged();
-        }
+    public void swap(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -51,19 +47,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        MoviesModel currentMoviesData = data.get(position);
-        Picasso.with(context).load(currentMoviesData.getPosterPath()).into(holder.posterImage);
-    }
-
-    public void setRecyclerListener(ClickListener recyclerListener) {
-        this.recyclerListener = recyclerListener;
-
-
+        mCursor.moveToPosition(position);
+        String path_url = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH));
+        Log.i("ZOKA","pathh   = "+path_url);
+        Picasso.with(context).load(path_url).into(holder.posterImage);
     }
 
     @Override
     public int getItemCount() {
-        return data.size();
+        if (null == mCursor) return 0;
+        return mCursor.getCount();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -75,15 +68,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
             super(view);
 
             ButterKnife.bind(this, view);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (recyclerListener != null) {
-                        recyclerListener.OnItemClicked(v, data.get(getAdapterPosition()));
-                    }
-                }
-            });
-
 
         }
     }

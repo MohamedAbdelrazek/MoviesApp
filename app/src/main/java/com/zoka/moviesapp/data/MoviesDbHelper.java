@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class MoviesDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String DATABASE_NAME = "weather.db";
 
@@ -23,6 +23,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 MoviesContract.MoviesEntry.COLUMN_ID + " TEXT PRIMARY KEY  NOT NULL, " +
                 MoviesContract.MoviesEntry.COLUMN_DATE + " TEXT, " +
                 MoviesContract.MoviesEntry.COLUMN_BACK_DROP_PATH + " TEXT, " +
+                MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + " TEXT NOT NULL , " +
                 MoviesContract.MoviesEntry.COLUMN_POSTER_PATH + " TEXT, " +
                 MoviesContract.MoviesEntry.COLUMN_RATE + " TEXT, " +
                 MoviesContract.MoviesEntry.COLUMN_DESCRIPTION + " TEXT, " +

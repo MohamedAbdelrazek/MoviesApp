@@ -18,7 +18,7 @@ public class MoviesProvider extends ContentProvider {
     private MoviesDbHelper mOpenHelper;
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
-    static final int CODES_MOVIES = 100;
+    static final int CODE_MOVIES = 100;
     static final int MOVIES_DETAILS = 101;
     static final int TRAILERS = 200;
     static final int REVIEWS = 300;
@@ -27,7 +27,7 @@ public class MoviesProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = MoviesContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODES_MOVIES);
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODE_MOVIES);
         return matcher;
     }
 
@@ -44,7 +44,7 @@ public class MoviesProvider extends ContentProvider {
 
         switch (sUriMatcher.match(uri)) {
 
-            case CODES_MOVIES:
+            case CODE_MOVIES:
                 db.beginTransaction();
                 int rowsInserted = 0;
                 try {
@@ -77,7 +77,7 @@ public class MoviesProvider extends ContentProvider {
         SQLiteDatabase database = mOpenHelper.getReadableDatabase();
         int match = sUriMatcher.match(uri);
         switch (match) {
-            case CODES_MOVIES:
+            case CODE_MOVIES:
                 zCursor = database.query(MoviesContract.MoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
@@ -86,6 +86,32 @@ public class MoviesProvider extends ContentProvider {
         }
         zCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return zCursor;
+    }
+    @Override
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+
+        int numRowsDeleted;
+
+        switch (sUriMatcher.match(uri)) {
+
+            case CODE_MOVIES:
+                numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
+                        MoviesContract.MoviesEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
+
+                break;
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        /* If we actually deleted any rows, notify that a change has occurred to this URI */
+        if (numRowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return numRowsDeleted;
     }
 
 
@@ -101,10 +127,7 @@ public class MoviesProvider extends ContentProvider {
         return null;
     }
 
-    @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
-    }
+
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
