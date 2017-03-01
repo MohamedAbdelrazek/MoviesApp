@@ -140,7 +140,8 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
                     URL url = NetworkUtils.buildQueryParam(sortType);
 
                     String jsonRes = NetworkUtils.JsonResponse(url);
-                    return JsonUtils.getMoviesData(jsonRes);
+                    ArrayList<MoviesModel> data = JsonUtils.getMoviesData(jsonRes);
+                    return data;
 
                 } catch (MalformedURLException e) {
                     e.printStackTrace();

@@ -1,9 +1,13 @@
 package com.zoka.moviesapp.data;
 
+import android.annotation.TargetApi;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
@@ -11,21 +15,84 @@ import android.support.annotation.Nullable;
  */
 
 public class MoviesProvider extends ContentProvider {
+    private MoviesDbHelper mOpenHelper;
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+
+    static final int CODES_MOVIES = 100;
+    static final int MOVIES_DETAILS = 101;
+    static final int TRAILERS = 200;
+    static final int REVIEWS = 300;
+
+    static UriMatcher buildUriMatcher() {
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = MoviesContract.CONTENT_AUTHORITY;
+
+        matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODES_MOVIES);
+        return matcher;
+    }
+
+
     @Override
     public boolean onCreate() {
-        return false;
+        mOpenHelper = new MoviesDbHelper(getContext());
+        return true;
+    }
+
+    @Override
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        switch (sUriMatcher.match(uri)) {
+
+            case CODES_MOVIES:
+                db.beginTransaction();
+                int rowsInserted = 0;
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(MoviesContract.MoviesEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            rowsInserted++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+
+                if (rowsInserted > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
+
+                return rowsInserted;
+
+            default:
+                return super.bulkInsert(uri, values);
+        }
     }
 
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        Cursor zCursor;
+        SQLiteDatabase database = mOpenHelper.getReadableDatabase();
+        int match = sUriMatcher.match(uri);
+        switch (match) {
+            case CODES_MOVIES:
+                zCursor = database.query(MoviesContract.MoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            default:
+                throw new IllegalStateException("cant Query this URI ! ");
+
+        }
+        zCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return zCursor;
     }
+
 
     @Nullable
     @Override
     public String getType(Uri uri) {
-        return null;
+        throw new RuntimeException("We are not implementing getType in Movies App.");
     }
 
     @Nullable
@@ -42,5 +109,12 @@ public class MoviesProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
+    }
+
+    @Override
+    @TargetApi(11)
+    public void shutdown() {
+        mOpenHelper.close();
+        super.shutdown();
     }
 }
