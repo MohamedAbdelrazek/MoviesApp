@@ -25,11 +25,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     private LayoutInflater inflater;
     private Context context;
     private Cursor mCursor;
-    private ClickListener recyclerListener;
+    private ClickListener mClickListener;
 
-    public MoviesAdapter(Context context) {
+    public MoviesAdapter(Context context, ClickListener clickListener) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+        mClickListener = clickListener;
     }
 
     public void swap(Cursor newCursor) {
@@ -49,7 +50,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     public void onBindViewHolder(MyViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         String path_url = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH));
-        Log.i("ZOKA","pathh   = "+path_url);
+        Log.i("ZOKA", "pathh   = " + path_url);
         Picasso.with(context).load(path_url).into(holder.posterImage);
     }
 
@@ -66,8 +67,16 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
         public MyViewHolder(View view) {
             super(view);
-
             ButterKnife.bind(this, view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mCursor.moveToPosition(getAdapterPosition());
+                    String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID));
+                    mClickListener.OnItemClicked(id);
+
+                }
+            });
 
         }
     }

@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
-public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String SORT_TYPE_EXTRA = "sort";
     private static final int LOADER_ID = 22;
     MoviesAdapter adapter;
@@ -41,6 +41,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     RecyclerView zRecycler;
     public static final String[] Movies_PROJECTION = {
             MoviesContract.MoviesEntry.COLUMN_POSTER_PATH,
+            MoviesContract.MoviesEntry.COLUMN_ID
     };
 
     @Override
@@ -59,7 +60,13 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         ButterKnife.bind(this, view);
         //for showing data base structure>
         Stetho.initializeWithDefaults(getContext());
-        adapter = new MoviesAdapter(getContext());
+        adapter = new MoviesAdapter(getContext(), new ClickListener() {
+            @Override
+            public void OnItemClicked(String MovieId) {
+                Toast.makeText(getContext(), ""+MovieId, Toast.LENGTH_SHORT).show();
+
+            }
+        });
         zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
         zRecycler.setHasFixedSize(true);
         zRecycler.setAdapter(adapter);
@@ -147,4 +154,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         adapter.swap(null);
 
     }
+
+
 }
