@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,6 +29,14 @@
                 android:value=".MainActivity"></meta-data>
 
         </activity>
+
+        <provider
+            android:name=".data.MoviesProvider"
+            android:authorities="com.zoka.moviesapp"
+            android:exported="false"></provider>
+        <service
+            android:name=".sync.MoviesSyncIntentService"
+            android:exported="false" />
     </application>
 
 </manifest>
