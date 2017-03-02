@@ -3,7 +3,6 @@ package com.zoka.moviesapp.sync;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 
 import com.zoka.moviesapp.data.MoviesContract;
 import com.zoka.moviesapp.utils.JsonUtils;
@@ -55,7 +54,6 @@ public class MoviesSyncTask {
             ContentValues[] data = JsonUtils.getMoviesData(jsonRes, sortType);
             if (data != null && data.length > 0) {
                 int inst = contentResolver.bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, data);
-                Log.i("ZOKA", "inserted rows =" + inst);
 
 
             }

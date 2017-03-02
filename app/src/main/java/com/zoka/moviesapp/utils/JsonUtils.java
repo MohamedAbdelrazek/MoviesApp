@@ -6,7 +6,6 @@ package com.zoka.moviesapp.utils;
 
 import android.content.ContentValues;
 
-import com.zoka.moviesapp.models.MoviesModel;
 import com.zoka.moviesapp.models.ReviewModel;
 import com.zoka.moviesapp.models.TrailerModel;
 
@@ -47,9 +46,7 @@ public class JsonUtils {
         String Date;
         String Rate;
         String id;
-
-
-        ArrayList<MoviesModel> MoviesList = new ArrayList<>();
+        
 
         JSONArray movieArray = jsonObject.getJSONArray(results);
         contentValues = new ContentValues[movieArray.length()];
@@ -58,7 +55,6 @@ public class JsonUtils {
         for (int i = 0; i < movieArray.length(); i++) {
             ContentValues values = new ContentValues();
 
-            MoviesModel movieModel = new MoviesModel();
             JSONObject MoviesObject = movieArray.getJSONObject(i);
             BackDropPhoto = FormatBackDropImage(MoviesObject.getString(MDB_MOVIE_BACKDROP_PHOTO));
             PosterPathPhoto = FormatPosterImage(MoviesObject.getString(MDB_MOVIE_POSTER));

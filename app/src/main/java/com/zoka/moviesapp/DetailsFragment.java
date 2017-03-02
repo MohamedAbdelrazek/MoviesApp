@@ -23,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.adapters.ReviewAdapter;
@@ -325,7 +324,6 @@ public class DetailsFragment extends Fragment {
                     String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
                     if (id.equalsIgnoreCase(mId)) {
                         favorite.setImageResource(R.drawable.heart_fav);
-                        Toast.makeText(getContext(), "Equals", Toast.LENGTH_SHORT).show();
 
                     }
                 }
