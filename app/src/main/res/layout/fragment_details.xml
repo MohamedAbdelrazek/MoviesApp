@@ -57,12 +57,13 @@
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/sub_header_txt_size" />
 
-                <ImageView
+                <ImageButton
                     android:id="@+id/fav"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:src="@drawable/heart_not_fav"
+                    android:background="@android:color/transparent"
                     android:layout_marginLeft="70dp" />
             </LinearLayout>
 

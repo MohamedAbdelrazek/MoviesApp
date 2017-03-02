@@ -33,7 +33,5 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.5.0'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
-
-
 }
 
