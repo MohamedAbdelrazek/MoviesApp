@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class MoviesDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 6;
 
     private static final String DATABASE_NAME = "weather.db";
 
@@ -29,15 +29,16 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 MoviesContract.MoviesEntry.COLUMN_DESCRIPTION + " TEXT, " +
                 MoviesContract.MoviesEntry.COLUMN_TITLE + " TEXT);";
 
-
-
+        final String SQL_CREATE_FAVOURITE_MOVIE_TABLE = "CREATE TABLE " + MoviesContract.FavouriteMoviesEntry.TABLE_NAME + " (" +
+                MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID + " TEXT NOT NULL UNIQUE);";
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
+        db.execSQL(SQL_CREATE_FAVOURITE_MOVIE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MoviesContract.MoviesEntry.TABLE_NAME);
-
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MoviesContract.FavouriteMoviesEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
 }

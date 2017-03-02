@@ -49,12 +49,21 @@
                 <TextView
                     android:id="@+id/release_data"
                     style="?android:attr/textAppearanceMedium"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_margin"
                     android:layout_marginTop="@dimen/activity_margin"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/sub_header_txt_size" />
+
+                <ImageView
+                    android:id="@+id/fav"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/heart_not_fav"
+                    android:layout_marginLeft="70dp" />
             </LinearLayout>
 
             <RatingBar

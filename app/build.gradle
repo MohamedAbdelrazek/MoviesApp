@@ -5,8 +5,8 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.zoka.moviesapp"
-        minSdkVersion 21
-        targetSdkVersion 25
+        minSdkVersion 19
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -33,6 +33,7 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.5.0'
     compile 'com.squareup.okhttp3:okhttp:3.6.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.2'
+
 
 }
 

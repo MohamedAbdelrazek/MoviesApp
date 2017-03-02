@@ -37,9 +37,9 @@ import butterknife.ButterKnife;
 public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String SORT_TYPE_EXTRA = "sort";
     private static final int LOADER_ID = 22;
-    MoviesAdapter adapter;
+    private MoviesAdapter adapter;
     @BindView(R.id.recycler_view_id)
-    RecyclerView zRecycler;
+    RecyclerView mRecycler;
     public static final String[] Movies_PROJECTION = {
             MoviesContract.MoviesEntry.COLUMN_POSTER_PATH,
             MoviesContract.MoviesEntry.COLUMN_ID
@@ -49,7 +49,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
         MoviesSyncUtils.initialize(getContext());
 
     }
@@ -68,12 +67,12 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
             }
         });
-        zRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
-        zRecycler.setHasFixedSize(true);
-        zRecycler.setAdapter(adapter);
+        mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
+        mRecycler.setHasFixedSize(true);
+        mRecycler.setAdapter(adapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.registerOnSharedPreferenceChangeListener(this);
-
+        getLoaderManager().initLoader(LOADER_ID, null, this);
         return view;
     }
 
@@ -83,6 +82,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
+
 
     private int calculateNoOfColumns() {
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();

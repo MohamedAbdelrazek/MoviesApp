@@ -1,7 +1,11 @@
 package com.zoka.moviesapp;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.adapters.ReviewAdapter;
@@ -41,11 +46,16 @@ import butterknife.ButterKnife;
  */
 
 public class DetailsFragment extends Fragment {
+    private static ContentResolver mContentResolver;
     private static final int LOADER_ID = 20;
     private static final int REVIEW_LOADER_ID = 30;
     private static final int TRAILER_LOADER_ID = 40;
+    private static final int FAVOURITE_LOADER_ID = 50;
     private ReviewAdapter mReviewAdapter;
     private TrailersAdapter mTrailersAdapter;
+
+    @BindView(R.id.fav)
+    ImageView favorite;
     @BindView(R.id.ratingBar)
     RatingBar mRate;
     @BindView(R.id.back_drop_path)
@@ -73,6 +83,10 @@ public class DetailsFragment extends Fragment {
         getLoaderManager().initLoader(LOADER_ID, null, moviesLoaderCallbacks);
         getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewsLoaderCallbacks);
         getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
+        getLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, favouriteLoaderCallbacks);
+        Intent intent = getActivity().getIntent();
+        mId = intent.getStringExtra(Intent.EXTRA_TEXT);
+
     }
 
     @Nullable
@@ -80,14 +94,14 @@ public class DetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View zRootView = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, zRootView);
+        mContentResolver = getContext().getContentResolver();
         mReviewAdapter = new ReviewAdapter(getContext(), new ArrayList<ReviewModel>());
         mReviewRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mReviewRecycler.setAdapter(mReviewAdapter);
         mTrailersAdapter = new TrailersAdapter(getActivity(), new ArrayList<TrailerModel>());
         mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mTrailerRecycler.setAdapter(mTrailersAdapter);
-        Intent intent = getActivity().getIntent();
-        mId = intent.getStringExtra(Intent.EXTRA_TEXT);
+
         if (!NetworkUtils.isNetworkAvailable(getContext())) {
             mReviewTitle.setVisibility(View.INVISIBLE);
             mTrailerTitle.setVisibility(View.INVISIBLE);
@@ -96,9 +110,53 @@ public class DetailsFragment extends Fragment {
             mTrailerTitle.setVisibility(View.VISIBLE);
 
         }
+
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeFavouriteMovies();
+            }
+        });
+
         return zRootView;
     }
 
+    private  void ChangeFavouriteMovies() {
+        if (iSInFavouriteList()) {
+            deleteMovie();
+            favorite.setImageResource(R.drawable.heart_not_fav);
+        } else {
+            inserMovie();
+            favorite.setImageResource(R.drawable.heart_fav);
+        }
+    }
+
+    private static void inserMovie() {
+        ContentValues values = new ContentValues();
+        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID, mId);
+        mContentResolver.insert(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, values);
+    }
+
+
+    public static void deleteMovie() {
+        Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
+        int r = mContentResolver.delete(uri, null, null);
+
+
+    }
+
+    private static boolean iSInFavouriteList() {
+        Cursor mCursor = mContentResolver.query(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, null, null, null, null);
+        mCursor.moveToFirst();
+        while (mCursor.moveToNext()) {
+            String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
+            if (id.equals(mId)) {
+                return true;
+            }
+
+        }
+        return false;
+    }
 
     private LoaderManager.LoaderCallbacks<Cursor> moviesLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
 
@@ -177,9 +235,8 @@ public class DetailsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<ArrayList<ReviewModel>> loader, ArrayList<ReviewModel> data) {
-
-
             mReviewAdapter.swap(data);
+
 
         }
 
@@ -219,6 +276,7 @@ public class DetailsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<ArrayList<TrailerModel>> loader, ArrayList<TrailerModel> data) {
+
             mTrailersAdapter.swap(data);
 
 
@@ -229,6 +287,51 @@ public class DetailsFragment extends Fragment {
 
         }
     };
+    private LoaderManager.LoaderCallbacks<Cursor> favouriteLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
 
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new AsyncTaskLoader<Cursor>(getContext()) {
+
+
+                @Override
+                protected void onStartLoading() {
+                    forceLoad();
+                }
+
+                @Override
+                public Cursor loadInBackground() {
+
+                    return getContext().getContentResolver().query(MoviesContract.FavouriteMoviesEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            null);
+                }
+            };
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor mCursor) {
+
+            if (mCursor != null) {
+                mCursor.moveToFirst();
+                while (mCursor.moveToNext()) {
+                    String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
+                    if (id.equalsIgnoreCase(mId)) {
+                        favorite.setImageResource(R.drawable.heart_fav);
+                        Toast.makeText(getContext(), "Equals", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+
+            }
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
+        }
+    };
 
 }
