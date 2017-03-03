@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,20 @@ public class MoviesProvider extends ContentProvider {
     static final int CODE_MOVIES = 100;
     static final int CODE_FAVOURITE_MOVIES = 200;
     static final int CODE_FAVOURITE_MOVIES_ID = 201;
+    private static final SQLiteQueryBuilder sFavouriteMoviesListQueryBuilder;
+
+    static {
+        sFavouriteMoviesListQueryBuilder = new SQLiteQueryBuilder();
+        sFavouriteMoviesListQueryBuilder.setTables(
+                MoviesContract.MoviesEntry.TABLE_NAME + " INNER JOIN " +
+                        MoviesContract.FavouriteMoviesEntry.TABLE_NAME +
+                        " ON " + MoviesContract.MoviesEntry.TABLE_NAME +
+                        "." + MoviesContract.MoviesEntry.COLUMN_ID +
+                        " = " + MoviesContract.FavouriteMoviesEntry.TABLE_NAME +
+                        "." + MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID);
+
+
+    }
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -34,6 +49,8 @@ public class MoviesProvider extends ContentProvider {
         matcher.addURI(authority, MoviesContract.PATH_MOVIES, CODE_MOVIES);
         matcher.addURI(authority, MoviesContract.PATH_FAVOURITE_MOVIES, CODE_FAVOURITE_MOVIES);
         matcher.addURI(authority, MoviesContract.PATH_FAVOURITE_MOVIES + "/#", CODE_FAVOURITE_MOVIES_ID);
+
+
         return matcher;
     }
 
@@ -78,23 +95,29 @@ public class MoviesProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        Cursor zCursor = null;
+        Cursor mCursor = null;
         SQLiteDatabase database = mOpenHelper.getReadableDatabase();
         int match = sUriMatcher.match(uri);
         switch (match) {
             case CODE_MOVIES:
-                zCursor = database.query(MoviesContract.MoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                mCursor = database.query(MoviesContract.MoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case CODE_FAVOURITE_MOVIES:
-                zCursor = database.query(MoviesContract.FavouriteMoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case CODE_FAVOURITE_MOVIES_ID:
+                Log.i("ZOKA",""+uri.toString());
+                Log.i("ZOKA",""+String.valueOf(ContentUris.parseId(uri)));
+                selection = MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID + " = ?";
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
+                mCursor = database.query(MoviesContract.FavouriteMoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
                 throw new IllegalStateException("cant Query this URI ! ");
 
         }
 
-        zCursor.setNotificationUri(getContext().getContentResolver(), uri);
-        return zCursor;
+        mCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return mCursor;
     }
 
     @Override

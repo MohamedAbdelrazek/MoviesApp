@@ -14,6 +14,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,12 +131,12 @@ public class DetailsFragment extends Fragment {
             deleteMovie();
             favorite.setImageResource(R.drawable.heart_not_fav);
         } else {
-            inserMovie();
+            insertMovie();
             favorite.setImageResource(R.drawable.heart_fav);
         }
     }
 
-    private static void inserMovie() {
+    private static void insertMovie() {
         ContentValues values = new ContentValues();
         values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID, mId);
         mContentResolver.insert(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, values);
@@ -150,16 +151,23 @@ public class DetailsFragment extends Fragment {
     }
 
     private static boolean iSInFavouriteList() {
-        Cursor mCursor = mContentResolver.query(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, null, null, null, null);
-        mCursor.moveToFirst();
-        while (mCursor.moveToNext()) {
-            String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
-            if (id.equals(mId)) {
-                return true;
-            }
+        Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
+        Cursor mCursor = mContentResolver.query(uri, null, null, null, null);
 
+        if (mCursor != null && mCursor.getCount() > 0) {
+            mCursor.moveToFirst();
+            {
+                String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
+
+                if (id.equalsIgnoreCase(mId)) {
+                    return true;
+
+                }
+            }
         }
         return false;
+
+
     }
 
     private LoaderManager.LoaderCallbacks<Cursor> moviesLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -305,12 +313,8 @@ public class DetailsFragment extends Fragment {
 
                 @Override
                 public Cursor loadInBackground() {
-
-                    return getContext().getContentResolver().query(MoviesContract.FavouriteMoviesEntry.CONTENT_URI,
-                            null,
-                            null,
-                            null,
-                            null);
+                    Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
+                    return mContentResolver.query(uri, null, null, null, null);
                 }
             };
         }
@@ -318,18 +322,22 @@ public class DetailsFragment extends Fragment {
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor mCursor) {
 
-            if (mCursor != null) {
+            if (mCursor != null && mCursor.getCount() > 0) {
                 mCursor.moveToFirst();
-                while (mCursor.moveToNext()) {
+                {
                     String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
+                    Log.i("ZOKA", "id in loader = " + id);
+
                     if (id.equalsIgnoreCase(mId)) {
                         favorite.setImageResource(R.drawable.heart_fav);
 
                     }
                 }
-
+            } else {
+                favorite.setImageResource(R.drawable.heart_not_fav);
             }
         }
+
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {

@@ -13,6 +13,7 @@ public class PreferenceUtilities {
     private static final String DEFAULT_SORT = "popular";
     public static String TOP_RATED = "top_rated";
     public static String POPULAR = "popular";
+    public static String FAVOURITE = "favourite";
 
 
     public static void setSortType(Context context, String sortType) {

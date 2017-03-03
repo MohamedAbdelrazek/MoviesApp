@@ -46,7 +46,7 @@ public class JsonUtils {
         String Date;
         String Rate;
         String id;
-        
+
 
         JSONArray movieArray = jsonObject.getJSONArray(results);
         contentValues = new ContentValues[movieArray.length()];

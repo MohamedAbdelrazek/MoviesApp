@@ -3,6 +3,7 @@ package com.zoka.moviesapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -19,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.zoka.moviesapp.adapters.MoviesAdapter;
@@ -35,7 +35,6 @@ import butterknife.ButterKnife;
  */
 
 public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final String SORT_TYPE_EXTRA = "sort";
     private static final int LOADER_ID = 22;
     private MoviesAdapter adapter;
     @BindView(R.id.recycler_view_id)
@@ -107,7 +106,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
             PreferenceUtilities.setSortType(getContext(), PreferenceUtilities.POPULAR);
             return true;
         } else if (id == R.id.favourite_id) {
-            Toast.makeText(getActivity(), "Favourite List no ready Yet!", Toast.LENGTH_SHORT).show();
+            PreferenceUtilities.setSortType(getContext(), PreferenceUtilities.FAVOURITE);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -125,6 +124,9 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
 
         return new AsyncTaskLoader<Cursor>(getContext()) {
+            String selection;
+            String[] selectionArg;
+
             @Override
             protected void onStartLoading() {
                 forceLoad();
@@ -132,9 +134,19 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
             @Override
             public Cursor loadInBackground() {
-                String selection = MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + "= ?";
-                String[] selectionArg = {PreferenceUtilities.getSortType(getContext())};
-                return getContext().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+                Uri uri;
+                String sortType = PreferenceUtilities.getSortType(getContext());
+
+                //   if (sortType.equals(PreferenceUtilities.FAVOURITE)) {
+
+                //  } else {
+                selection = MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + "= ?";
+                selectionArg = new String[]{sortType};
+                uri = MoviesContract.MoviesEntry.CONTENT_URI;
+
+                //}
+
+                return getContext().getContentResolver().query(uri,
                         Movies_PROJECTION,
                         selection,
                         selectionArg,
