@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.facebook.stetho.Stetho;
 import com.zoka.moviesapp.adapters.MoviesAdapter;
@@ -38,6 +39,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     private MoviesAdapter adapter;
     @BindView(R.id.recycler_view_id)
     RecyclerView mRecycler;
+    FrameLayout mFrameLayout;
     public final static String MOVIES_POSTER_PATH = "poster_path";
     public final static String MOVIES_POSTER_ID = "id";
     private static final String[] Movies_PROJECTION = {
@@ -64,6 +66,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         //for showing data base structure>
         Stetho.initializeWithDefaults(getContext());
         adapter = new MoviesAdapter(getContext(), new ClickListener() {
+
             @Override
             public void OnItemClicked(MoviesModel moviesModel) {
                 mMoviesListener.setMovies(moviesModel);
@@ -71,6 +74,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
             }
         });
+        mFrameLayout = (FrameLayout) view.findViewById(R.id.fragment_movies);
         mRecycler.setLayoutManager(new GridLayoutManager(getActivity(), calculateNoOfColumns()));
         mRecycler.setHasFixedSize(true);
         mRecycler.setAdapter(adapter);
@@ -91,7 +95,13 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     private int calculateNoOfColumns() {
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels;
-        int noOfColumns = (int) (dpWidth / 300);
+        int noOfColumns;
+        if (mFrameLayout == null) {
+            noOfColumns = (int) (dpWidth / 300);
+
+        } else {
+            noOfColumns = (int) (dpWidth / 600);
+        }
         return noOfColumns;
     }
 
