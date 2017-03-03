@@ -92,8 +92,14 @@ public class DetailsFragment extends Fragment {
         getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewsLoaderCallbacks);
         getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
         getLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, favouriteLoaderCallbacks);
-        Intent intent = getActivity().getIntent();
-        MoviesModel moviesModel = intent.getParcelableExtra(Intent.EXTRA_TEXT);
+        MoviesModel moviesModel = null;
+        try {
+            moviesModel = getArguments().getParcelable(Intent.EXTRA_TEXT);
+
+        } catch (Exception e) {
+            moviesModel = getActivity().getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+        }
+
         mId = moviesModel.getMoviesId();
         mPosterPath = moviesModel.getMoviesPosterPath();
         Log.i("ZOKA", "m id " + mId);
