@@ -122,10 +122,6 @@ public class DetailsFragment extends Fragment {
         if (!NetworkUtils.isNetworkAvailable(getContext())) {
             mReviewTitle.setVisibility(View.GONE);
             mTrailerTitle.setVisibility(View.GONE);
-        } else {
-            mReviewTitle.setVisibility(View.VISIBLE);
-            mTrailerTitle.setVisibility(View.VISIBLE);
-
         }
         final Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.anim);
         favorite.setOnClickListener(new View.OnClickListener() {
@@ -261,6 +257,9 @@ public class DetailsFragment extends Fragment {
         @Override
         public void onLoadFinished(Loader<ArrayList<ReviewModel>> loader, ArrayList<ReviewModel> data) {
             mReviewAdapter.swap(data);
+            if (data.size() != 0) {
+                mReviewTitle.setVisibility(View.VISIBLE);
+            }
 
 
         }
@@ -303,6 +302,9 @@ public class DetailsFragment extends Fragment {
         public void onLoadFinished(Loader<ArrayList<TrailerModel>> loader, ArrayList<TrailerModel> data) {
 
             mTrailersAdapter.swap(data);
+            if (data.size() != 0) {
+                mTrailerTitle.setVisibility(View.VISIBLE);
+            }
 
 
         }
