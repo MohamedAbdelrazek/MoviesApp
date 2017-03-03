@@ -66,11 +66,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         adapter = new MoviesAdapter(getContext(), new ClickListener() {
             @Override
             public void OnItemClicked(MoviesModel moviesModel) {
-                //  Intent intent = new Intent(getContext(), DetailsActivity.class);
-                //Bundle bundle = new Bundle();
-                //bundle.putParcelable(Intent.EXTRA_TEXT, moviesModel);
-                //intent.putExtras(bundle);
-                //startActivity(intent);
                 mMoviesListener.setMovies(moviesModel);
 
 

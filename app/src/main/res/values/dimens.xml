@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_margin">16dp</dimen>
     <dimen name="main_header_txt_size">20dp</dimen>
-    <dimen name="sub_header_txt_size">16dp</dimen>
-    <dimen name="txt_view_height">200dp</dimen>
+    <dimen name="sub_header_txt_size">14dp</dimen>
+    <dimen name="txt_view_height">250dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 </resources>

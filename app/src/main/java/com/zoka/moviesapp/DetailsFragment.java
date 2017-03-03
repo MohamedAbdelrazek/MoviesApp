@@ -114,8 +114,8 @@ public class DetailsFragment extends Fragment {
         mTrailerRecycler.setAdapter(mTrailersAdapter);
 
         if (!NetworkUtils.isNetworkAvailable(getContext())) {
-            mReviewTitle.setVisibility(View.INVISIBLE);
-            mTrailerTitle.setVisibility(View.INVISIBLE);
+            mReviewTitle.setVisibility(View.GONE);
+            mTrailerTitle.setVisibility(View.GONE);
         } else {
             mReviewTitle.setVisibility(View.VISIBLE);
             mTrailerTitle.setVisibility(View.VISIBLE);
@@ -211,7 +211,7 @@ public class DetailsFragment extends Fragment {
                 mDescription.setText(mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)));
                 mMovieName.setText(mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)));
                 String path = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_BACK_DROP_PATH));
-                Picasso.with(getContext()).load(path).placeholder(R.drawable.place_holder_image_for_back_image).into(mBackDropImage);
+                Picasso.with(getContext()).load(path).into(mBackDropImage);
 
             }
 

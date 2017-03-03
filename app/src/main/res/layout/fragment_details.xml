@@ -1,15 +1,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:context="com.muhammadfarag.popularmovies.details.DetailsActivityFragment">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,8 +16,10 @@
             <ImageView
                 android:id="@+id/back_drop_path"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true" />
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+
+                android:minHeight="200dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -50,21 +49,22 @@
                     android:id="@+id/release_data"
                     style="?android:attr/textAppearanceMedium"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_margin"
                     android:layout_marginTop="@dimen/activity_margin"
+                    android:layout_weight="1"
                     android:textColor="@android:color/black"
+
                     android:textSize="@dimen/sub_header_txt_size" />
 
                 <ImageButton
                     android:id="@+id/fav"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/heart_not_fav"
+                    android:layout_marginLeft="70dp"
+                    android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:layout_marginLeft="70dp" />
+                    android:src="@drawable/heart_not_fav" />
             </LinearLayout>
 
             <RatingBar
@@ -93,17 +93,19 @@
             android:id="@+id/trailer_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:text="Trailers :"
-            android:textSize="30sp"
-            android:visibility="gone" />
+            android:layout_marginLeft="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:gravity="center"
+            android:text="Trailers"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/main_header_txt_size"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginBottom="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
@@ -116,24 +118,24 @@
             android:id="@+id/review_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="@dimen/activity_margin"
+            android:gravity="center"
             android:text="Reviews:"
-            android:textSize="30sp"
-            android:visibility="gone" />
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/main_header_txt_size"
+            android:textStyle="bold" />
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
+            android:layout_marginBottom="@dimen/activity_margin"
+            android:layout_marginTop="@dimen/activity_margin">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/review_recycler"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
-        </LinearLayout>
+        </FrameLayout>
 
     </LinearLayout>
 

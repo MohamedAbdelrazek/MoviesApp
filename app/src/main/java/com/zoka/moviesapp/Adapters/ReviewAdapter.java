@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.zoka.moviesapp.models.ReviewModel;
 import com.zoka.moviesapp.R;
+import com.zoka.moviesapp.models.ReviewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
     }
 
     public void swap(ArrayList<ReviewModel> zData) {
-        if (zData!=null) {
+        if (zData != null) {
             data.clear();
             data.addAll(zData);
             notifyDataSetChanged();
@@ -43,14 +43,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
     @Override
     public ReviewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.review_single_item, parent, false);
-        ReviewHolder reviewHolder=new ReviewHolder(view);
+        ReviewHolder reviewHolder = new ReviewHolder(view);
         return reviewHolder;
     }
 
     @Override
     public void onBindViewHolder(ReviewHolder holder, int position) {
+
         ReviewModel currentReviewData = data.get(position);
-        holder.authorName.setText(currentReviewData.getAuthorName());
+        holder.authorName.setText(CapsInit(currentReviewData.getAuthorName()));
         holder.content.setText(currentReviewData.getContent());
         holder.url.setText(currentReviewData.getUrl());
 
@@ -79,4 +80,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
 
         }
     }
+
+    private static String CapsInit(String name) {
+        String capInitName = name.substring(0, 1).toUpperCase() + name.substring(1);
+        return capInitName;
+    }
+
 }
+
