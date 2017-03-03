@@ -39,5 +39,6 @@ public class MoviesContract {
                 .appendPath(PATH_FAVOURITE_MOVIES)
                 .build();
 
+        public static final String COLUMN_POSTER_PATH = "poster_path";
     }
 }

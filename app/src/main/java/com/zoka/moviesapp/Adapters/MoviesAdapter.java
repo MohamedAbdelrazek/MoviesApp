@@ -11,8 +11,9 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.ClickListener;
+import com.zoka.moviesapp.MoviesFragment;
 import com.zoka.moviesapp.R;
-import com.zoka.moviesapp.data.MoviesContract;
+import com.zoka.moviesapp.models.FavouriteMoviesModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +32,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         this.context = context;
         inflater = LayoutInflater.from(context);
         mClickListener = clickListener;
+
     }
 
     public void swap(Cursor newCursor) {
@@ -48,9 +50,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+        Log.i("ZOKA", "poisition" + position);
         mCursor.moveToPosition(position);
-        String path_url = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH));
-        Log.i("ZOKA", "pathh   = " + path_url);
+        String path_url = mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH));
         Picasso.with(context).load(path_url).into(holder.posterImage);
     }
 
@@ -72,8 +74,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                 @Override
                 public void onClick(View v) {
                     mCursor.moveToPosition(getAdapterPosition());
-                    String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID));
-                    mClickListener.OnItemClicked(id);
+                    FavouriteMoviesModel favouriteMoviesModel = new FavouriteMoviesModel();
+                    favouriteMoviesModel.setMoviesId(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_ID)));
+                    favouriteMoviesModel.setMoviesPosterPath(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH)));
+                    mClickListener.OnItemClicked(favouriteMoviesModel);
 
                 }
             });

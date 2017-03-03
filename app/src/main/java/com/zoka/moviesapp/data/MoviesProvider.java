@@ -7,11 +7,9 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import static android.R.attr.id;
 import static com.zoka.moviesapp.data.MoviesContract.CONTENT_AUTHORITY;
@@ -27,20 +25,6 @@ public class MoviesProvider extends ContentProvider {
     static final int CODE_MOVIES = 100;
     static final int CODE_FAVOURITE_MOVIES = 200;
     static final int CODE_FAVOURITE_MOVIES_ID = 201;
-    private static final SQLiteQueryBuilder sFavouriteMoviesListQueryBuilder;
-
-    static {
-        sFavouriteMoviesListQueryBuilder = new SQLiteQueryBuilder();
-        sFavouriteMoviesListQueryBuilder.setTables(
-                MoviesContract.MoviesEntry.TABLE_NAME + " INNER JOIN " +
-                        MoviesContract.FavouriteMoviesEntry.TABLE_NAME +
-                        " ON " + MoviesContract.MoviesEntry.TABLE_NAME +
-                        "." + MoviesContract.MoviesEntry.COLUMN_ID +
-                        " = " + MoviesContract.FavouriteMoviesEntry.TABLE_NAME +
-                        "." + MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID);
-
-
-    }
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -103,10 +87,10 @@ public class MoviesProvider extends ContentProvider {
                 mCursor = database.query(MoviesContract.MoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case CODE_FAVOURITE_MOVIES:
+                mCursor = database.query(MoviesContract.FavouriteMoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+
                 break;
             case CODE_FAVOURITE_MOVIES_ID:
-                Log.i("ZOKA",""+uri.toString());
-                Log.i("ZOKA",""+String.valueOf(ContentUris.parseId(uri)));
                 selection = MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID + " = ?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 mCursor = database.query(MoviesContract.FavouriteMoviesEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
@@ -126,7 +110,6 @@ public class MoviesProvider extends ContentProvider {
         int numRowsDeleted;
 
         switch (sUriMatcher.match(uri)) {
-
             case CODE_MOVIES:
                 numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
                         MoviesContract.MoviesEntry.TABLE_NAME,
@@ -136,7 +119,6 @@ public class MoviesProvider extends ContentProvider {
             case CODE_FAVOURITE_MOVIES_ID:
                 selection = MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                Log.i("ZOKA", "Value of ID = " + String.valueOf(ContentUris.parseId(uri)));
                 numRowsDeleted = mOpenHelper.getWritableDatabase().delete(
                         MoviesContract.FavouriteMoviesEntry.TABLE_NAME,
                         selection,

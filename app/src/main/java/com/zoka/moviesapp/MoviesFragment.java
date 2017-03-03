@@ -3,7 +3,6 @@ package com.zoka.moviesapp;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -24,6 +23,7 @@ import android.view.ViewGroup;
 import com.facebook.stetho.Stetho;
 import com.zoka.moviesapp.adapters.MoviesAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
+import com.zoka.moviesapp.models.FavouriteMoviesModel;
 import com.zoka.moviesapp.sync.MoviesSyncUtils;
 import com.zoka.moviesapp.utils.PreferenceUtilities;
 
@@ -39,9 +39,10 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     private MoviesAdapter adapter;
     @BindView(R.id.recycler_view_id)
     RecyclerView mRecycler;
-    public static final String[] Movies_PROJECTION = {
-            MoviesContract.MoviesEntry.COLUMN_POSTER_PATH,
-            MoviesContract.MoviesEntry.COLUMN_ID
+    public final static String MOVIES_POSTER_PATH = "poster_path";
+    public final static String MOVIES_POSTER_ID = "id";
+    private static final String[] Movies_PROJECTION = {
+            MOVIES_POSTER_PATH, MOVIES_POSTER_ID
     };
 
     @Override
@@ -50,7 +51,9 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         setHasOptionsMenu(true);
         MoviesSyncUtils.initialize(getContext());
 
+
     }
+
 
     @Nullable
     @Override
@@ -61,8 +64,12 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         Stetho.initializeWithDefaults(getContext());
         adapter = new MoviesAdapter(getContext(), new ClickListener() {
             @Override
-            public void OnItemClicked(String movieId) {
-                startActivity(new Intent(getContext(), DetailsActivity.class).putExtra(Intent.EXTRA_TEXT, movieId));
+            public void OnItemClicked(FavouriteMoviesModel favouriteMoviesModel) {
+                Intent intent = new Intent(getContext(), DetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(Intent.EXTRA_TEXT, favouriteMoviesModel);
+                intent.putExtras(bundle);
+                startActivity(intent);
 
             }
         });
@@ -90,9 +97,12 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         return noOfColumns;
     }
 
+
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
+
     }
 
 
@@ -134,23 +144,19 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
             @Override
             public Cursor loadInBackground() {
-                Uri uri;
                 String sortType = PreferenceUtilities.getSortType(getContext());
 
-                //   if (sortType.equals(PreferenceUtilities.FAVOURITE)) {
-
-                //  } else {
-                selection = MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + "= ?";
-                selectionArg = new String[]{sortType};
-                uri = MoviesContract.MoviesEntry.CONTENT_URI;
-
-                //}
-
-                return getContext().getContentResolver().query(uri,
-                        Movies_PROJECTION,
-                        selection,
-                        selectionArg,
-                        null);
+                if (sortType.equals(PreferenceUtilities.FAVOURITE)) {
+                    return getContext().getContentResolver().query(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Movies_PROJECTION, null, null, null);
+                } else {
+                    selection = MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + "= ?";
+                    selectionArg = new String[]{sortType};
+                    return getContext().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+                            Movies_PROJECTION,
+                            selection,
+                            selectionArg,
+                            null);
+                }
 
 
             }

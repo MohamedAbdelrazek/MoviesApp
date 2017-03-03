@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.adapters.ReviewAdapter;
 import com.zoka.moviesapp.adapters.TrailersAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
+import com.zoka.moviesapp.models.FavouriteMoviesModel;
 import com.zoka.moviesapp.models.ReviewModel;
 import com.zoka.moviesapp.models.TrailerModel;
 import com.zoka.moviesapp.utils.JsonUtils;
@@ -78,6 +79,10 @@ public class DetailsFragment extends Fragment {
     @BindView(R.id.trailer_title)
     TextView mTrailerTitle;
     private static String mId;
+    private static String mPosterPath;
+    public static final String[] FavouriteMovies_PROJECTION = {
+            MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID
+    };
 
 
     @Override
@@ -88,8 +93,11 @@ public class DetailsFragment extends Fragment {
         getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
         getLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, favouriteLoaderCallbacks);
         Intent intent = getActivity().getIntent();
-        mId = intent.getStringExtra(Intent.EXTRA_TEXT);
-
+        FavouriteMoviesModel moviesModel = intent.getParcelableExtra(Intent.EXTRA_TEXT);
+        mId = moviesModel.getMoviesId();
+        mPosterPath = moviesModel.getMoviesPosterPath();
+        Log.i("ZOKA", "m id " + mId);
+        Log.i("ZOKA", "mposter" + mPosterPath);
     }
 
     @Nullable
@@ -122,7 +130,6 @@ public class DetailsFragment extends Fragment {
 
             }
         });
-
         return zRootView;
     }
 
@@ -137,17 +144,17 @@ public class DetailsFragment extends Fragment {
     }
 
     private static void insertMovie() {
+        Log.i("ZOKA", "inset moview " + mPosterPath + "   id= " + mId);
         ContentValues values = new ContentValues();
         values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID, mId);
+        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_POSTER_PATH, mPosterPath);
         mContentResolver.insert(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, values);
     }
 
 
     public static void deleteMovie() {
         Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
-        int r = mContentResolver.delete(uri, null, null);
-
-
+        mContentResolver.delete(uri, null, null);
     }
 
     private static boolean iSInFavouriteList() {
@@ -314,7 +321,7 @@ public class DetailsFragment extends Fragment {
                 @Override
                 public Cursor loadInBackground() {
                     Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
-                    return mContentResolver.query(uri, null, null, null, null);
+                    return mContentResolver.query(uri, FavouriteMovies_PROJECTION, null, null, null);
                 }
             };
         }
