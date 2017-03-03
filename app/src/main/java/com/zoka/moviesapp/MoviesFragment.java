@@ -1,6 +1,5 @@
 package com.zoka.moviesapp;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ import android.view.ViewGroup;
 import com.facebook.stetho.Stetho;
 import com.zoka.moviesapp.adapters.MoviesAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
-import com.zoka.moviesapp.models.FavouriteMoviesModel;
+import com.zoka.moviesapp.models.MoviesModel;
 import com.zoka.moviesapp.sync.MoviesSyncUtils;
 import com.zoka.moviesapp.utils.PreferenceUtilities;
 
@@ -45,6 +44,8 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
             MOVIES_POSTER_PATH, MOVIES_POSTER_ID
     };
 
+    private static MoviesListener mMoviesListener;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +65,14 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         Stetho.initializeWithDefaults(getContext());
         adapter = new MoviesAdapter(getContext(), new ClickListener() {
             @Override
-            public void OnItemClicked(FavouriteMoviesModel favouriteMoviesModel) {
-                Intent intent = new Intent(getContext(), DetailsActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelable(Intent.EXTRA_TEXT, favouriteMoviesModel);
-                intent.putExtras(bundle);
-                startActivity(intent);
+            public void OnItemClicked(MoviesModel moviesModel) {
+                //  Intent intent = new Intent(getContext(), DetailsActivity.class);
+                //Bundle bundle = new Bundle();
+                //bundle.putParcelable(Intent.EXTRA_TEXT, moviesModel);
+                //intent.putExtras(bundle);
+                //startActivity(intent);
+                mMoviesListener.setMovies(moviesModel);
+
 
             }
         });
@@ -96,7 +99,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         int noOfColumns = (int) (dpWidth / 300);
         return noOfColumns;
     }
-
 
 
     @Override
@@ -174,5 +176,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     }
 
-
+    public static void setMoviesListener(MoviesListener moviesListener) {
+        mMoviesListener = moviesListener;
+    }
 }

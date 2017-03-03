@@ -29,7 +29,7 @@ import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.adapters.ReviewAdapter;
 import com.zoka.moviesapp.adapters.TrailersAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
-import com.zoka.moviesapp.models.FavouriteMoviesModel;
+import com.zoka.moviesapp.models.MoviesModel;
 import com.zoka.moviesapp.models.ReviewModel;
 import com.zoka.moviesapp.models.TrailerModel;
 import com.zoka.moviesapp.utils.JsonUtils;
@@ -93,7 +93,7 @@ public class DetailsFragment extends Fragment {
         getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
         getLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, favouriteLoaderCallbacks);
         Intent intent = getActivity().getIntent();
-        FavouriteMoviesModel moviesModel = intent.getParcelableExtra(Intent.EXTRA_TEXT);
+        MoviesModel moviesModel = intent.getParcelableExtra(Intent.EXTRA_TEXT);
         mId = moviesModel.getMoviesId();
         mPosterPath = moviesModel.getMoviesPosterPath();
         Log.i("ZOKA", "m id " + mId);

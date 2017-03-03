@@ -13,7 +13,7 @@ import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.ClickListener;
 import com.zoka.moviesapp.MoviesFragment;
 import com.zoka.moviesapp.R;
-import com.zoka.moviesapp.models.FavouriteMoviesModel;
+import com.zoka.moviesapp.models.MoviesModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,10 +74,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                 @Override
                 public void onClick(View v) {
                     mCursor.moveToPosition(getAdapterPosition());
-                    FavouriteMoviesModel favouriteMoviesModel = new FavouriteMoviesModel();
-                    favouriteMoviesModel.setMoviesId(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_ID)));
-                    favouriteMoviesModel.setMoviesPosterPath(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH)));
-                    mClickListener.OnItemClicked(favouriteMoviesModel);
+                    MoviesModel moviesModel = new MoviesModel();
+                    moviesModel.setMoviesId(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_ID)));
+                    moviesModel.setMoviesPosterPath(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH)));
+                    mClickListener.OnItemClicked(moviesModel);
 
                 }
             });

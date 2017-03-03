@@ -7,28 +7,28 @@ import android.os.Parcelable;
  * Created by Mohamed AbdelraZek on 3/3/2017.
  */
 
-public class FavouriteMoviesModel implements Parcelable {
+public class MoviesModel implements Parcelable {
     private String moviesId;
     private String moviesPosterPath;
 
-    public FavouriteMoviesModel()
+    public MoviesModel()
     {
 
     }
-    protected FavouriteMoviesModel(Parcel in) {
+    protected MoviesModel(Parcel in) {
         moviesId = in.readString();
         moviesPosterPath = in.readString();
     }
 
-    public static final Creator<FavouriteMoviesModel> CREATOR = new Creator<FavouriteMoviesModel>() {
+    public static final Creator<MoviesModel> CREATOR = new Creator<MoviesModel>() {
         @Override
-        public FavouriteMoviesModel createFromParcel(Parcel in) {
-            return new FavouriteMoviesModel(in);
+        public MoviesModel createFromParcel(Parcel in) {
+            return new MoviesModel(in);
         }
 
         @Override
-        public FavouriteMoviesModel[] newArray(int size) {
-            return new FavouriteMoviesModel[size];
+        public MoviesModel[] newArray(int size) {
+            return new MoviesModel[size];
         }
     };
 
