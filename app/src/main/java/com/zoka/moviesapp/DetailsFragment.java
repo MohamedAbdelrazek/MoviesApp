@@ -14,7 +14,6 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,8 +101,6 @@ public class DetailsFragment extends Fragment {
 
         mId = moviesModel.getMoviesId();
         mPosterPath = moviesModel.getMoviesPosterPath();
-        Log.i("ZOKA", "m id " + mId);
-        Log.i("ZOKA", "mposter" + mPosterPath);
     }
 
     @Nullable
@@ -146,7 +143,6 @@ public class DetailsFragment extends Fragment {
     }
 
     private static void insertMovie() {
-        Log.i("ZOKA", "inset moview " + mPosterPath + "   id= " + mId);
         ContentValues values = new ContentValues();
         values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID, mId);
         values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_POSTER_PATH, mPosterPath);
@@ -345,7 +341,7 @@ public class DetailsFragment extends Fragment {
                 mCursor.moveToFirst();
                 {
                     String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
-                    Log.i("ZOKA", "id in loader = " + id);
+
 
                     if (id.equalsIgnoreCase(mId)) {
                         favorite.setImageResource(R.drawable.heart_fav);

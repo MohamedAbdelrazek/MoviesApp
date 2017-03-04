@@ -30,7 +30,6 @@ public class MoviesSyncTask {
         try {
             //delete all the data
             // int del = contentResolver.delete(MoviesContract.MoviesEntry.CONTENT_URI, null, null);
-            //Log.i("ZOKA", "deleted rows =" + del);
 
             //Storing Popular Movies .
             StoreMoviesData(PreferenceUtilities.POPULAR);
@@ -53,9 +52,7 @@ public class MoviesSyncTask {
             String jsonRes = NetworkUtils.JsonResponse(url);
             ContentValues[] data = JsonUtils.getMoviesData(jsonRes, sortType);
             if (data != null && data.length > 0) {
-                int inst = contentResolver.bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, data);
-
-
+                contentResolver.bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, data);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();

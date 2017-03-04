@@ -3,7 +3,6 @@ package com.zoka.moviesapp.adapters;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +49,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Log.i("ZOKA", "poisition" + position);
         mCursor.moveToPosition(position);
         String path_url = mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH));
         Picasso.with(context).load(path_url).into(holder.posterImage);
