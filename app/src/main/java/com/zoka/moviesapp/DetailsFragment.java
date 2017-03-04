@@ -256,12 +256,14 @@ public class DetailsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<ArrayList<ReviewModel>> loader, ArrayList<ReviewModel> data) {
-            mReviewAdapter.swap(data);
-            if (data.size() != 0) {
-                mReviewTitle.setVisibility(View.VISIBLE);
+            if (data != null) {
+                mReviewAdapter.swap(data);
+
+                if (data.size() != 0) {
+                    mReviewTitle.setVisibility(View.VISIBLE);
+                }
+
             }
-
-
         }
 
         @Override
@@ -269,7 +271,6 @@ public class DetailsFragment extends Fragment {
 
         }
     };
-    private static String mKey;
     private LoaderManager.LoaderCallbacks<ArrayList<TrailerModel>> trailersLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<TrailerModel>>() {
 
         @Override
@@ -301,14 +302,15 @@ public class DetailsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<ArrayList<TrailerModel>> loader, ArrayList<TrailerModel> data) {
+            if (data != null) {
+                mTrailersAdapter.swap(data);
 
-            mTrailersAdapter.swap(data);
-            if (data.size() != 0) {
-                mTrailerTitle.setVisibility(View.VISIBLE);
-                mKey = data.get(0).getKey();
+
+                if (data.size() != 0) {
+                    mTrailerTitle.setVisibility(View.VISIBLE);
+                }
+
             }
-
-
         }
 
         @Override
