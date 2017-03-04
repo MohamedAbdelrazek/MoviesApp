@@ -269,6 +269,7 @@ public class DetailsFragment extends Fragment {
 
         }
     };
+    private static String mKey;
     private LoaderManager.LoaderCallbacks<ArrayList<TrailerModel>> trailersLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<TrailerModel>>() {
 
         @Override
@@ -304,6 +305,7 @@ public class DetailsFragment extends Fragment {
             mTrailersAdapter.swap(data);
             if (data.size() != 0) {
                 mTrailerTitle.setVisibility(View.VISIBLE);
+                mKey = data.get(0).getKey();
             }
 
 
