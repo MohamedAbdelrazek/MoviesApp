@@ -21,26 +21,36 @@ You must provide your own API key in order to build the app. When you get it, ju
     ```
     gradle.properties
     ```
-  into the project,then add a string variable with your api_key ___ the Format will be like this
+  into the project,then add a string variable with your own API Key
+    the Format will be something like this
     ```
     API_KEY="Your api_key"
     ```
 ## User Interfaces:
 
 ![screens](../master/screens/device-2017-03-04-104330.png)
-
 ![screens](../master/screens/device-2017-03-04-104235.png)
-
 ![screens](../master/screens/device-2017-03-04-104402.png)
-
 ![screens](../master/screens/device-2017-03-04-104505.png)
-
 ![screens](../master/screens/device-2017-03-04-104525.png)
-
 ![screens](../master/screens/device-2017-03-04-104543.png)
-
+![screens](../master/screens/device-2017-03-04-111427.png)
 ![screens](../master/screens/device-2017-03-04-104622.png)
 
+## Libraries
+
+* [ButterKnife](https://github.com/JakeWharton/butterknife)
+* [Stetho](http://facebook.github.io/stetho/)
+* [Picasso](http://square.github.io/picasso/)
+* [Recyclerview]()
+* [Okhttp](https://github.com/square/okhttp)
+
+
+## Android Developer Nanodegree
+[![udacity][1]][2]
+
+[1]: ../master/screens/nanodegree-logo.png
+[2]: https://www.udacity.com/course/android-developer-nanodegree--nd801
 
 
 ## License
