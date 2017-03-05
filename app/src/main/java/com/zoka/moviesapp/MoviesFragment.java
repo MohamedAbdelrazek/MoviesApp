@@ -7,7 +7,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -84,7 +84,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         mRecycler.setAdapter(adapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.registerOnSharedPreferenceChangeListener(this);
-      //  getLoaderManager().initLoader(LOADER_ID, null, this);
+        //  getLoaderManager().initLoader(LOADER_ID, null, this);
         return view;
     }
 
@@ -142,36 +142,18 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String selection;
+        String[] selectionArg;
+        String sortType = PreferenceUtilities.getSortType(getContext());
 
+        if (sortType.equals(PreferenceUtilities.FAVOURITE)) {
+            return new CursorLoader(getContext(), MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Movies_PROJECTION, null, null, null);
+        } else {
+            selection = MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + "= ?";
+            selectionArg = new String[]{sortType};
+            return new CursorLoader(getContext(), MoviesContract.MoviesEntry.CONTENT_URI, Movies_PROJECTION, selection, selectionArg, null);
+        }
 
-        return new AsyncTaskLoader<Cursor>(getContext()) {
-            String selection;
-            String[] selectionArg;
-
-            @Override
-            protected void onStartLoading() {
-                forceLoad();
-            }
-
-            @Override
-            public Cursor loadInBackground() {
-                String sortType = PreferenceUtilities.getSortType(getContext());
-
-                if (sortType.equals(PreferenceUtilities.FAVOURITE)) {
-                    return getContext().getContentResolver().query(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Movies_PROJECTION, null, null, null);
-                } else {
-                    selection = MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + "= ?";
-                    selectionArg = new String[]{sortType};
-                    return getContext().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
-                            Movies_PROJECTION,
-                            selection,
-                            selectionArg,
-                            null);
-                }
-
-
-            }
-        };
     }
 
     @Override

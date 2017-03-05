@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -179,25 +180,16 @@ public class DetailsFragment extends Fragment {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new AsyncTaskLoader<Cursor>(getContext()) {
+
+            String selection = MoviesContract.MoviesEntry.COLUMN_ID + "= ?";
+            String[] selectionArg = {mId};
+            return new CursorLoader(getContext(), MoviesContract.MoviesEntry.CONTENT_URI,
+                    null,
+                    selection,
+                    selectionArg,
+                    null);
 
 
-                @Override
-                protected void onStartLoading() {
-                    forceLoad();
-                }
-
-                @Override
-                public Cursor loadInBackground() {
-                    String selection = MoviesContract.MoviesEntry.COLUMN_ID + "= ?";
-                    String[] selectionArg = {mId};
-                    return getContext().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
-                            null,
-                            selection,
-                            selectionArg,
-                            null);
-                }
-            };
         }
 
         @Override
