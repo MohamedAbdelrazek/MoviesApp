@@ -16,7 +16,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         f_Panel_2 = (FrameLayout) findViewById(R.id.panel_two_id);
-        getSupportFragmentManager().beginTransaction().replace(R.id.panel_one_id, new MoviesFragment()).commit();
+        if (savedInstanceState == null) {
+
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.panel_one_id, new MoviesFragment()).commit();
+        }
         if (null == f_Panel_2) {
             mTowPan = false;
 

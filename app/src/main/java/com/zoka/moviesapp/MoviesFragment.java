@@ -53,8 +53,12 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         MoviesSyncUtils.initialize(getContext());
+    }
 
-
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        getLoaderManager().initLoader(LOADER_ID, null, this);
+        super.onActivityCreated(savedInstanceState);
     }
 
 
@@ -80,7 +84,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         mRecycler.setAdapter(adapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.registerOnSharedPreferenceChangeListener(this);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+      //  getLoaderManager().initLoader(LOADER_ID, null, this);
         return view;
     }
 
