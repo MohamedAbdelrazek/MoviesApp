@@ -11,10 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.zoka.moviesapp.adapters.ReviewAdapter;
 import com.zoka.moviesapp.adapters.TrailersAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
@@ -92,16 +92,13 @@ public class DetailsFragment extends Fragment {
         getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewsLoaderCallbacks);
         getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
         getLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, favouriteLoaderCallbacks);
-        MoviesModel moviesModel = null;
-        try {
-            moviesModel = getArguments().getParcelable(Intent.EXTRA_TEXT);
-
-        } catch (Exception e) {
-            moviesModel = getActivity().getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
-        }
+        Intent intent = getActivity().getIntent();
+        MoviesModel moviesModel = intent.getParcelableExtra(Intent.EXTRA_TEXT);
 
         mId = moviesModel.getMoviesId();
         mPosterPath = moviesModel.getMoviesPosterPath();
+        Log.i("ZOKA", "m id " + mId);
+        Log.i("ZOKA", "mposter" + mPosterPath);
     }
 
     @Nullable
@@ -118,8 +115,12 @@ public class DetailsFragment extends Fragment {
         mTrailerRecycler.setAdapter(mTrailersAdapter);
 
         if (!NetworkUtils.isNetworkAvailable(getContext())) {
-            mReviewTitle.setVisibility(View.GONE);
-            mTrailerTitle.setVisibility(View.GONE);
+            mReviewTitle.setVisibility(View.INVISIBLE);
+            mTrailerTitle.setVisibility(View.INVISIBLE);
+        } else {
+            mReviewTitle.setVisibility(View.VISIBLE);
+            mTrailerTitle.setVisibility(View.VISIBLE);
+
         }
         final Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.anim);
         favorite.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +145,7 @@ public class DetailsFragment extends Fragment {
     }
 
     private static void insertMovie() {
+        Log.i("ZOKA", "inset moview " + mPosterPath + "   id= " + mId);
         ContentValues values = new ContentValues();
         values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID, mId);
         values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_POSTER_PATH, mPosterPath);
@@ -181,14 +183,25 @@ public class DetailsFragment extends Fragment {
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-            String selection = MoviesContract.MoviesEntry.COLUMN_ID + "= ?";
-            String[] selectionArg = {mId};
-            return new CursorLoader(getContext(), MoviesContract.MoviesEntry.CONTENT_URI,
-                    null,
-                    selection,
-                    selectionArg,
-                    null);
+            return new AsyncTaskLoader<Cursor>(getContext()) {
 
+
+                @Override
+                protected void onStartLoading() {
+                    forceLoad();
+                }
+
+                @Override
+                public Cursor loadInBackground() {
+                    String selection = MoviesContract.MoviesEntry.COLUMN_ID + "= ?";
+                    String[] selectionArg = {mId};
+                    return getContext().getContentResolver().query(MoviesContract.MoviesEntry.CONTENT_URI,
+                            null,
+                            selection,
+                            selectionArg,
+                            null);
+                }
+            };
 
         }
 
@@ -201,7 +214,7 @@ public class DetailsFragment extends Fragment {
                 mDescription.setText(mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_DESCRIPTION)));
                 mMovieName.setText(mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)));
                 String path = mCursor.getString(mCursor.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_BACK_DROP_PATH));
-                Picasso.with(getContext()).load(path).into(mBackDropImage);
+                Glide.with(getContext()).load(path).placeholder(R.drawable.place_holder_image_for_back_image).into(mBackDropImage);
 
             }
 
@@ -244,14 +257,9 @@ public class DetailsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<ArrayList<ReviewModel>> loader, ArrayList<ReviewModel> data) {
-            if (data != null) {
-                mReviewAdapter.swap(data);
+            mReviewAdapter.swap(data);
 
-                if (data.size() != 0) {
-                    mReviewTitle.setVisibility(View.VISIBLE);
-                }
 
-            }
         }
 
         @Override
@@ -290,15 +298,10 @@ public class DetailsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<ArrayList<TrailerModel>> loader, ArrayList<TrailerModel> data) {
-            if (data != null) {
-                mTrailersAdapter.swap(data);
+
+            mTrailersAdapter.swap(data);
 
 
-                if (data.size() != 0) {
-                    mTrailerTitle.setVisibility(View.VISIBLE);
-                }
-
-            }
         }
 
         @Override
@@ -333,7 +336,7 @@ public class DetailsFragment extends Fragment {
                 mCursor.moveToFirst();
                 {
                     String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
-
+                    Log.i("ZOKA", "id in loader = " + id);
 
                     if (id.equalsIgnoreCase(mId)) {
                         favorite.setImageResource(R.drawable.heart_fav);

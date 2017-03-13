@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.zoka.moviesapp.ClickListener;
 import com.zoka.moviesapp.MoviesFragment;
 import com.zoka.moviesapp.R;
@@ -51,7 +51,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
     public void onBindViewHolder(MyViewHolder holder, int position) {
         mCursor.moveToPosition(position);
         String path_url = mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH));
-        Picasso.with(context).load(path_url).into(holder.posterImage);
+        Glide.with(context).load(path_url).into(holder.posterImage);
     }
 
     @Override

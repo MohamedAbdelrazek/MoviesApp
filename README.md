@@ -41,7 +41,7 @@ You must provide your own API key in order to build the app. When you get it, ju
 
 * [ButterKnife](https://github.com/JakeWharton/butterknife)
 * [Stetho](http://facebook.github.io/stetho/)
-* [Picasso](http://square.github.io/picasso/)
+* [Glide](https://github.com/bumptech/glide)
 * [Recyclerview]()
 * [Okhttp](https://github.com/square/okhttp)
 
