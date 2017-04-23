@@ -17,8 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        setSupportActionBar(myToolbar);      getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         f_Panel_2 = (FrameLayout) findViewById(R.id.panel_two_id);
         if (savedInstanceState == null) {
 
