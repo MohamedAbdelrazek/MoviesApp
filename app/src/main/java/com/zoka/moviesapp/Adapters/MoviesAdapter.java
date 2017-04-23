@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
  * Created by Mohamed AbdelraZek on 2/20/2017.
  */
 
+
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHolder> {
     private LayoutInflater inflater;
     private Context context;

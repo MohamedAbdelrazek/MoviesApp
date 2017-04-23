@@ -10,6 +10,7 @@ import android.os.Parcelable;
 public class MoviesModel implements Parcelable {
     private String moviesId;
     private String moviesPosterPath;
+    private String movieTitle;
 
     public MoviesModel()
     {
@@ -18,6 +19,7 @@ public class MoviesModel implements Parcelable {
     protected MoviesModel(Parcel in) {
         moviesId = in.readString();
         moviesPosterPath = in.readString();
+        movieTitle=in.readString();
     }
 
     public static final Creator<MoviesModel> CREATOR = new Creator<MoviesModel>() {
@@ -57,6 +59,7 @@ public class MoviesModel implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(moviesId);
         dest.writeString(moviesPosterPath);
+        dest.writeString(movieTitle);
 
     }
 }
