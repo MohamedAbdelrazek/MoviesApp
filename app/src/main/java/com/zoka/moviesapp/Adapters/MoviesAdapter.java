@@ -53,6 +53,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
         mCursor.moveToPosition(position);
         String path_url = mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH));
         Glide.with(context).load(path_url).into(holder.posterImage);
+        holder.posterImage.setContentDescription("Movie Name is " + mCursor.getString(mCursor.getColumnIndex(MoviesFragment.COLUMN_TITLE)));
     }
 
     @Override
@@ -76,6 +77,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                     MoviesModel moviesModel = new MoviesModel();
                     moviesModel.setMoviesId(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_ID)));
                     moviesModel.setMoviesPosterPath(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH)));
+                    moviesModel.setMovieTitle(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.COLUMN_TITLE)));
                     mClickListener.OnItemClicked(moviesModel);
 
                 }

@@ -3,4 +3,12 @@
     <string name="top_rated_label">Top Movies</string>
     <string name="popular_label">Popular Movies</string>
     <string name="favourite_label">Favourite Movies</string>
+    <string name="trailer_title">Trailers</string>
+    <string name="review_title">Reviews</string>
+    <string name="poster_image_desc">Movie Poster Image</string>
+    <string name="fav_desc">Favourite list</string>
+    <string name="backdrop_image_desc">Back drop image </string>
+    <string name="trailer_image_desc">Trailer video</string>
+    <string name="remove_from_fav_desc">This Movie removed from favourite List</string>
+    <string name="added_to_fav_desc">This Movie added to favourite list</string>
 </resources>

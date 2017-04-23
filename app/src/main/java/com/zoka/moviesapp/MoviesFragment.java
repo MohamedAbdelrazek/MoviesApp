@@ -42,8 +42,10 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     FrameLayout mFrameLayout;
     public final static String MOVIES_POSTER_PATH = "poster_path";
     public final static String MOVIES_POSTER_ID = "id";
+    public static final String COLUMN_TITLE = "title";
+
     private static final String[] Movies_PROJECTION = {
-            MOVIES_POSTER_PATH, MOVIES_POSTER_ID
+            MOVIES_POSTER_PATH, MOVIES_POSTER_ID, COLUMN_TITLE
     };
 
     private static MoviesListener mMoviesListener;

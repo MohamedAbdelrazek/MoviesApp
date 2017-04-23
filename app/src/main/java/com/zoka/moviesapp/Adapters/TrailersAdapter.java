@@ -85,12 +85,9 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
                     Intent videoClient = new Intent(Intent.ACTION_VIEW);
                     videoClient.setData(Uri.parse(NetworkUtils.YOUTUBE_BASE + data.get(getAdapterPosition()).getKey()));
                     context.startActivity(videoClient);
-
                 }
             });
 
-
         }
     }
-
 }

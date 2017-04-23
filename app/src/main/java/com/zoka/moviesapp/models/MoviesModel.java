@@ -12,6 +12,14 @@ public class MoviesModel implements Parcelable {
     private String moviesPosterPath;
     private String movieTitle;
 
+    public String getMovieTitle() {
+        return movieTitle;
+    }
+
+    public void setMovieTitle(String movieTitle) {
+        this.movieTitle = movieTitle;
+    }
+
     public MoviesModel()
     {
 

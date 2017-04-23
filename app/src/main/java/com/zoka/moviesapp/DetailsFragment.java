@@ -30,8 +30,6 @@ import com.zoka.moviesapp.adapters.ReviewAdapter;
 import com.zoka.moviesapp.adapters.TrailersAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
 import com.zoka.moviesapp.models.MoviesModel;
-import com.zoka.moviesapp.models.ReviewModel;
-import com.zoka.moviesapp.models.TrailerModel;
 import com.zoka.moviesapp.utils.JsonUtils;
 import com.zoka.moviesapp.utils.NetworkUtils;
 
@@ -45,6 +43,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.zoka.moviesapp.R.id.fav;
+
 /**
  * Created by Mohamed AbdelraZek on 2/21/2017.
  */
@@ -57,8 +57,9 @@ public class DetailsFragment extends Fragment {
     private static final int FAVOURITE_LOADER_ID = 50;
     private ReviewAdapter mReviewAdapter;
     private TrailersAdapter mTrailersAdapter;
+    private MoviesModel moviesModel;
 
-    @BindView(R.id.fav)
+    @BindView(fav)
     ImageButton favorite;
     @BindView(R.id.ratingBar)
     RatingBar mRate;
@@ -93,12 +94,9 @@ public class DetailsFragment extends Fragment {
         getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
         getLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, favouriteLoaderCallbacks);
         Intent intent = getActivity().getIntent();
-        MoviesModel moviesModel = intent.getParcelableExtra(Intent.EXTRA_TEXT);
-
+        moviesModel = intent.getParcelableExtra(Intent.EXTRA_TEXT);
         mId = moviesModel.getMoviesId();
         mPosterPath = moviesModel.getMoviesPosterPath();
-        Log.i("ZOKA", "m id " + mId);
-        Log.i("ZOKA", "mposter" + mPosterPath);
     }
 
     @Nullable
@@ -107,10 +105,10 @@ public class DetailsFragment extends Fragment {
         View zRootView = inflater.inflate(R.layout.fragment_details, container, false);
         ButterKnife.bind(this, zRootView);
         mContentResolver = getContext().getContentResolver();
-        mReviewAdapter = new ReviewAdapter(getContext(), new ArrayList<ReviewModel>());
+        mReviewAdapter = new ReviewAdapter(getContext(), new ArrayList<com.zoka.moviesapp.models.ReviewModel>());
         mReviewRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mReviewRecycler.setAdapter(mReviewAdapter);
-        mTrailersAdapter = new TrailersAdapter(getActivity(), new ArrayList<TrailerModel>());
+        mTrailersAdapter = new TrailersAdapter(getActivity(), new ArrayList<com.zoka.moviesapp.models.TrailerModel>());
         mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mTrailerRecycler.setAdapter(mTrailersAdapter);
 
@@ -131,6 +129,8 @@ public class DetailsFragment extends Fragment {
 
             }
         });
+
+        mBackDropImage.setContentDescription(moviesModel.getMovieTitle()+"Backdrop Image");
         return zRootView;
     }
 
@@ -138,9 +138,11 @@ public class DetailsFragment extends Fragment {
         if (iSInFavouriteList()) {
             deleteMovie();
             favorite.setImageResource(R.drawable.heart_not_fav);
+            favorite.setContentDescription(getString(R.string.remove_from_fav_desc));
         } else {
             insertMovie();
             favorite.setImageResource(R.drawable.heart_fav);
+            favorite.setContentDescription(getString(R.string.added_to_fav_desc));
         }
     }
 
@@ -225,18 +227,18 @@ public class DetailsFragment extends Fragment {
 
         }
     };
-    private LoaderManager.LoaderCallbacks<ArrayList<ReviewModel>> reviewsLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<ReviewModel>>() {
+    private LoaderManager.LoaderCallbacks<ArrayList<com.zoka.moviesapp.models.ReviewModel>> reviewsLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<com.zoka.moviesapp.models.ReviewModel>>() {
 
         @Override
-        public Loader<ArrayList<ReviewModel>> onCreateLoader(int id, Bundle args) {
-            return new AsyncTaskLoader<ArrayList<ReviewModel>>(getActivity()) {
+        public Loader<ArrayList<com.zoka.moviesapp.models.ReviewModel>> onCreateLoader(int id, Bundle args) {
+            return new AsyncTaskLoader<ArrayList<com.zoka.moviesapp.models.ReviewModel>>(getActivity()) {
                 @Override
                 protected void onStartLoading() {
                     forceLoad();
                 }
 
                 @Override
-                public ArrayList<ReviewModel> loadInBackground() {
+                public ArrayList<com.zoka.moviesapp.models.ReviewModel> loadInBackground() {
 
                     try {
                         URL url = NetworkUtils.buildQueryReviewParam(mId);
@@ -256,29 +258,29 @@ public class DetailsFragment extends Fragment {
         }
 
         @Override
-        public void onLoadFinished(Loader<ArrayList<ReviewModel>> loader, ArrayList<ReviewModel> data) {
+        public void onLoadFinished(Loader<ArrayList<com.zoka.moviesapp.models.ReviewModel>> loader, ArrayList<com.zoka.moviesapp.models.ReviewModel> data) {
             mReviewAdapter.swap(data);
 
 
         }
 
         @Override
-        public void onLoaderReset(Loader<ArrayList<ReviewModel>> loader) {
+        public void onLoaderReset(Loader<ArrayList<com.zoka.moviesapp.models.ReviewModel>> loader) {
 
         }
     };
-    private LoaderManager.LoaderCallbacks<ArrayList<TrailerModel>> trailersLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<TrailerModel>>() {
+    private LoaderManager.LoaderCallbacks<ArrayList<com.zoka.moviesapp.models.TrailerModel>> trailersLoaderCallbacks = new LoaderManager.LoaderCallbacks<ArrayList<com.zoka.moviesapp.models.TrailerModel>>() {
 
         @Override
-        public Loader<ArrayList<TrailerModel>> onCreateLoader(int id, Bundle args) {
-            return new AsyncTaskLoader<ArrayList<TrailerModel>>(getActivity()) {
+        public Loader<ArrayList<com.zoka.moviesapp.models.TrailerModel>> onCreateLoader(int id, Bundle args) {
+            return new AsyncTaskLoader<ArrayList<com.zoka.moviesapp.models.TrailerModel>>(getActivity()) {
                 @Override
                 protected void onStartLoading() {
                     forceLoad();
                 }
 
                 @Override
-                public ArrayList<TrailerModel> loadInBackground() {
+                public ArrayList<com.zoka.moviesapp.models.TrailerModel> loadInBackground() {
                     try {
                         URL url = NetworkUtils.buildQueryTrailerParam(mId);
                         String jsonStr = NetworkUtils.JsonResponse(url);
@@ -297,7 +299,7 @@ public class DetailsFragment extends Fragment {
         }
 
         @Override
-        public void onLoadFinished(Loader<ArrayList<TrailerModel>> loader, ArrayList<TrailerModel> data) {
+        public void onLoadFinished(Loader<ArrayList<com.zoka.moviesapp.models.TrailerModel>> loader, ArrayList<com.zoka.moviesapp.models.TrailerModel> data) {
 
             mTrailersAdapter.swap(data);
 
@@ -305,7 +307,7 @@ public class DetailsFragment extends Fragment {
         }
 
         @Override
-        public void onLoaderReset(Loader<ArrayList<TrailerModel>> loader) {
+        public void onLoaderReset(Loader<ArrayList<com.zoka.moviesapp.models.TrailerModel>> loader) {
 
         }
     };
