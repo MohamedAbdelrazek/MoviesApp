@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "615066352107",
+    "project_id": "firebase-moviesapp"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615066352107:android:411d9fa00fdb1301",
+        "android_client_info": {
+          "package_name": "com.zoka.moviesapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdpG7WYDQLlLvRmssHe1L4jgdX7DzKDeQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-97943465-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

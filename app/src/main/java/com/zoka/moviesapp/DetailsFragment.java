@@ -25,6 +25,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.zoka.moviesapp.adapters.ReviewAdapter;
 import com.zoka.moviesapp.adapters.TrailersAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
@@ -129,6 +131,10 @@ public class DetailsFragment extends Fragment {
         });
 
         mBackDropImage.setContentDescription(moviesModel.getMovieTitle()+"Backdrop Image");
+        AdView mAdView = (AdView) zRootView.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
         return zRootView;
     }
 

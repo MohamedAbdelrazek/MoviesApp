@@ -47,7 +47,10 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     private static final String[] Movies_PROJECTION = {
             MOVIES_POSTER_PATH, MOVIES_POSTER_ID, COLUMN_TITLE
     };
+    private static final String[] Movies_Fav_PROJECTION = {
+            MOVIES_POSTER_PATH, MOVIES_POSTER_ID
 
+    };
     private static MoviesListener mMoviesListener;
 
     @Override
@@ -149,7 +152,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         String sortType = PreferenceUtilities.getSortType(getContext());
 
         if (sortType.equals(PreferenceUtilities.FAVOURITE)) {
-            return new CursorLoader(getContext(), MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Movies_PROJECTION, null, null, null);
+            return new CursorLoader(getContext(), MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Movies_Fav_PROJECTION, null, null, null);
         } else {
             selection = MoviesContract.MoviesEntry.COLUMN_SORT_TYPE + "= ?";
             selectionArg = new String[]{sortType};

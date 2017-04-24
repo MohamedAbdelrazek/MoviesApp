@@ -11,4 +11,6 @@
     <string name="trailer_image_desc">Trailer video</string>
     <string name="remove_from_fav_desc">This Movie removed from favourite List</string>
     <string name="added_to_fav_desc">This Movie added to favourite list</string>
+    <string name="banner_ad_unit">ca-app-pub-8883523648400143/7062374912</string>
+
 </resources>
