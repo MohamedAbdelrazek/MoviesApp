@@ -27,6 +27,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.zoka.moviesapp.adapters.ReviewAdapter;
 import com.zoka.moviesapp.adapters.TrailersAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
@@ -85,6 +87,7 @@ public class DetailsFragment extends Fragment {
     public static final String[] FavouriteMovies_PROJECTION = {
             MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID
     };
+    private Tracker mTracker;
 
 
     @Override
@@ -97,6 +100,8 @@ public class DetailsFragment extends Fragment {
         moviesModel = getArguments().getParcelable(Intent.EXTRA_TEXT);
         mId = moviesModel.getMoviesId();
         mPosterPath = moviesModel.getMoviesPosterPath();
+        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
     }
 
     @Nullable
@@ -136,6 +141,13 @@ public class DetailsFragment extends Fragment {
                 .build();
         mAdView.loadAd(adRequest);
         return zRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTracker.setScreenName("Details Fragment screen !");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     private void ChangeFavouriteMovies() {

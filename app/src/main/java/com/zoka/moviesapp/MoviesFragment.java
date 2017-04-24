@@ -21,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.facebook.stetho.Stetho;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.zoka.moviesapp.adapters.MoviesAdapter;
 import com.zoka.moviesapp.data.MoviesContract;
 import com.zoka.moviesapp.models.MoviesModel;
@@ -52,12 +54,15 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
     };
     private static MoviesListener mMoviesListener;
+    private Tracker mTracker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         MoviesSyncUtils.initialize(getContext());
+        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+         mTracker = application.getDefaultTracker();
     }
 
     @Override
@@ -92,7 +97,12 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         //  getLoaderManager().initLoader(LOADER_ID, null, this);
         return view;
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTracker.setScreenName("Movies Fragment screen !");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
