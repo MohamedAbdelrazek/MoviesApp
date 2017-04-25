@@ -84,6 +84,7 @@ public class DetailsFragment extends Fragment {
     TextView mTrailerTitle;
     private static String mId;
     private static String mPosterPath;
+    private static String mMovieTitle;
     public static final String[] FavouriteMovies_PROJECTION = {
             MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID
     };
@@ -100,6 +101,7 @@ public class DetailsFragment extends Fragment {
         moviesModel = getArguments().getParcelable(Intent.EXTRA_TEXT);
         mId = moviesModel.getMoviesId();
         mPosterPath = moviesModel.getMoviesPosterPath();
+        mMovieTitle=moviesModel.getMovieTitle();
         AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
         mTracker = application.getDefaultTracker();
     }
@@ -167,6 +169,7 @@ public class DetailsFragment extends Fragment {
         ContentValues values = new ContentValues();
         values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID, mId);
         values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_POSTER_PATH, mPosterPath);
+        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_TITLE, mMovieTitle);
         mContentResolver.insert(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, values);
     }
 

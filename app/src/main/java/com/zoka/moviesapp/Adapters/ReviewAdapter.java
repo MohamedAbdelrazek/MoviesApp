@@ -22,12 +22,10 @@ import butterknife.ButterKnife;
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHolder> {
     private LayoutInflater inflater;
-    private Context context;
     private List<ReviewModel> data;
 
 
     public ReviewAdapter(Context context, List<ReviewModel> data) {
-        this.context = context;
         this.data = data;
         inflater = LayoutInflater.from(context);
     }

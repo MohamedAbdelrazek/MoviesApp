@@ -35,6 +35,7 @@ public class MoviesContract {
     public static class FavouriteMoviesEntry implements BaseColumns {
         public static final String TABLE_NAME = "favourite_movies";
         public static final String COLUMN_FAVOURITE_MOVIE_ID = "id";
+        public static final String COLUMN_TITLE = "title";
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_FAVOURITE_MOVIES)
                 .build();

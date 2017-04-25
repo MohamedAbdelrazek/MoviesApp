@@ -50,7 +50,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
             MOVIES_POSTER_PATH, MOVIES_POSTER_ID, COLUMN_TITLE
     };
     private static final String[] Movies_Fav_PROJECTION = {
-            MOVIES_POSTER_PATH, MOVIES_POSTER_ID
+            MOVIES_POSTER_PATH, MOVIES_POSTER_ID,COLUMN_TITLE
 
     };
     private static MoviesListener mMoviesListener;
