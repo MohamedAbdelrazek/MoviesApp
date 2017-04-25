@@ -78,7 +78,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MyViewHold
                     moviesModel.setMoviesId(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_ID)));
                     moviesModel.setMoviesPosterPath(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH)));
                     moviesModel.setMovieTitle(mCursor.getString(mCursor.getColumnIndex(MoviesFragment.COLUMN_TITLE)));
-                    mClickListener.OnItemClicked(moviesModel);
+                    mClickListener.onItemClicked(moviesModel);
 
                 }
             });

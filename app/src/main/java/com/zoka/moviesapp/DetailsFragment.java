@@ -53,15 +53,17 @@ import static com.zoka.moviesapp.R.id.fav;
  */
 
 public class DetailsFragment extends Fragment {
-    private static ContentResolver mContentResolver;
+    public static final String[] FavouriteMovies_PROJECTION = {
+            MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID
+    };
     private static final int LOADER_ID = 20;
     private static final int REVIEW_LOADER_ID = 30;
     private static final int TRAILER_LOADER_ID = 40;
     private static final int FAVOURITE_LOADER_ID = 50;
-    private ReviewAdapter mReviewAdapter;
-    private TrailersAdapter mTrailersAdapter;
-    private MoviesModel moviesModel;
-
+    private static ContentResolver mContentResolver;
+    private static String mId;
+    private static String mPosterPath;
+    private static String mMovieTitle;
     @BindView(fav)
     ImageButton favorite;
     @BindView(R.id.ratingBar)
@@ -82,123 +84,10 @@ public class DetailsFragment extends Fragment {
     TextView mReviewTitle;
     @BindView(R.id.trailer_title)
     TextView mTrailerTitle;
-    private static String mId;
-    private static String mPosterPath;
-    private static String mMovieTitle;
-    public static final String[] FavouriteMovies_PROJECTION = {
-            MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID
-    };
+    private ReviewAdapter mReviewAdapter;
+    private TrailersAdapter mTrailersAdapter;
+    private MoviesModel moviesModel;
     private Tracker mTracker;
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID, null, moviesLoaderCallbacks);
-        getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewsLoaderCallbacks);
-        getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
-        getLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, favouriteLoaderCallbacks);
-        moviesModel = getArguments().getParcelable(Intent.EXTRA_TEXT);
-        mId = moviesModel.getMoviesId();
-        mPosterPath = moviesModel.getMoviesPosterPath();
-        mMovieTitle=moviesModel.getMovieTitle();
-        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
-        mTracker = application.getDefaultTracker();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View zRootView = inflater.inflate(R.layout.fragment_details, container, false);
-        ButterKnife.bind(this, zRootView);
-        mContentResolver = getContext().getContentResolver();
-        mReviewAdapter = new ReviewAdapter(getContext(), new ArrayList<com.zoka.moviesapp.models.ReviewModel>());
-        mReviewRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        mReviewRecycler.setAdapter(mReviewAdapter);
-        mTrailersAdapter = new TrailersAdapter(getActivity(), new ArrayList<com.zoka.moviesapp.models.TrailerModel>());
-        mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        mTrailerRecycler.setAdapter(mTrailersAdapter);
-
-        if (!NetworkUtils.isNetworkAvailable(getContext())) {
-            mReviewTitle.setVisibility(View.INVISIBLE);
-            mTrailerTitle.setVisibility(View.INVISIBLE);
-        } else {
-            mReviewTitle.setVisibility(View.VISIBLE);
-            mTrailerTitle.setVisibility(View.VISIBLE);
-
-        }
-        final Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.anim);
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                favorite.startAnimation(anim);
-                ChangeFavouriteMovies();
-
-            }
-        });
-
-        mBackDropImage.setContentDescription(moviesModel.getMovieTitle()+"Backdrop Image");
-        AdView mAdView = (AdView) zRootView.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mAdView.loadAd(adRequest);
-        return zRootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mTracker.setScreenName("Details Fragment screen !");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-    }
-
-    private void ChangeFavouriteMovies() {
-        if (iSInFavouriteList()) {
-            deleteMovie();
-            favorite.setImageResource(R.drawable.heart_not_fav);
-            favorite.setContentDescription(getString(R.string.remove_from_fav_desc));
-        } else {
-            insertMovie();
-            favorite.setImageResource(R.drawable.heart_fav);
-            favorite.setContentDescription(getString(R.string.added_to_fav_desc));
-        }
-    }
-
-    private static void insertMovie() {
-
-        ContentValues values = new ContentValues();
-        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID, mId);
-        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_POSTER_PATH, mPosterPath);
-        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_TITLE, mMovieTitle);
-        mContentResolver.insert(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, values);
-    }
-
-
-    public static void deleteMovie() {
-        Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
-        mContentResolver.delete(uri, null, null);
-    }
-
-    private static boolean iSInFavouriteList() {
-        Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
-        Cursor mCursor = mContentResolver.query(uri, null, null, null, null);
-
-        if (mCursor != null && mCursor.getCount() > 0) {
-            mCursor.moveToFirst();
-            {
-                String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
-
-                if (id.equalsIgnoreCase(mId)) {
-                    return true;
-
-                }
-            }
-        }
-        return false;
-
-
-    }
-
     private LoaderManager.LoaderCallbacks<Cursor> moviesLoaderCallbacks = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
@@ -373,5 +262,113 @@ public class DetailsFragment extends Fragment {
 
         }
     };
+
+    private static void insertMovie() {
+
+        ContentValues values = new ContentValues();
+        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID, mId);
+        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_POSTER_PATH, mPosterPath);
+        values.put(MoviesContract.FavouriteMoviesEntry.COLUMN_TITLE, mMovieTitle);
+        mContentResolver.insert(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, values);
+    }
+
+
+    public static void deleteMovie() {
+        Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
+        mContentResolver.delete(uri, null, null);
+    }
+
+    private static boolean iSInFavouriteList() {
+        Uri uri = ContentUris.withAppendedId(MoviesContract.FavouriteMoviesEntry.CONTENT_URI, Long.parseLong(mId));
+        Cursor mCursor = mContentResolver.query(uri, null, null, null, null);
+
+        if (mCursor != null && mCursor.getCount() > 0) {
+            mCursor.moveToFirst();
+            {
+                String id = mCursor.getString(mCursor.getColumnIndex(MoviesContract.FavouriteMoviesEntry.COLUMN_FAVOURITE_MOVIE_ID));
+
+                if (id.equalsIgnoreCase(mId)) {
+                    return true;
+
+                }
+            }
+        }
+        return false;
+
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(LOADER_ID, null, moviesLoaderCallbacks);
+        getLoaderManager().initLoader(REVIEW_LOADER_ID, null, reviewsLoaderCallbacks);
+        getLoaderManager().initLoader(TRAILER_LOADER_ID, null, trailersLoaderCallbacks);
+        getLoaderManager().initLoader(FAVOURITE_LOADER_ID, null, favouriteLoaderCallbacks);
+        moviesModel = getArguments().getParcelable(Intent.EXTRA_TEXT);
+        mId = moviesModel.getMoviesId();
+        mPosterPath = moviesModel.getMoviesPosterPath();
+        mMovieTitle = moviesModel.getMovieTitle();
+        AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
+        mTracker = application.getDefaultTracker();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View zRootView = inflater.inflate(R.layout.fragment_details, container, false);
+        ButterKnife.bind(this, zRootView);
+        mContentResolver = getContext().getContentResolver();
+        mReviewAdapter = new ReviewAdapter(getContext(), new ArrayList<com.zoka.moviesapp.models.ReviewModel>());
+        mReviewRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        mReviewRecycler.setAdapter(mReviewAdapter);
+        mTrailersAdapter = new TrailersAdapter(getActivity(), new ArrayList<com.zoka.moviesapp.models.TrailerModel>());
+        mTrailerRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mTrailerRecycler.setAdapter(mTrailersAdapter);
+
+        if (!NetworkUtils.isNetworkAvailable(getContext())) {
+            mReviewTitle.setVisibility(View.INVISIBLE);
+            mTrailerTitle.setVisibility(View.INVISIBLE);
+        } else {
+            mReviewTitle.setVisibility(View.VISIBLE);
+            mTrailerTitle.setVisibility(View.VISIBLE);
+
+        }
+        final Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.anim);
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                favorite.startAnimation(anim);
+                ChangeFavouriteMovies();
+
+            }
+        });
+
+        mBackDropImage.setContentDescription(moviesModel.getMovieTitle() + "Backdrop Image");
+        AdView mAdView = (AdView) zRootView.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .build();
+        mAdView.loadAd(adRequest);
+        return zRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mTracker.setScreenName("Details Fragment screen !");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    private void ChangeFavouriteMovies() {
+        if (iSInFavouriteList()) {
+            deleteMovie();
+            favorite.setImageResource(R.drawable.heart_not_fav);
+            favorite.setContentDescription(getString(R.string.remove_from_fav_desc));
+        } else {
+            insertMovie();
+            favorite.setImageResource(R.drawable.heart_fav);
+            favorite.setContentDescription(getString(R.string.added_to_fav_desc));
+        }
+    }
 
 }

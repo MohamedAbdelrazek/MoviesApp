@@ -7,5 +7,5 @@ import com.zoka.moviesapp.models.MoviesModel;
  */
 
 public interface MoviesListener {
-    public void setMovies(MoviesModel movies);
+    void setMovies(MoviesModel movies);
 }

@@ -37,7 +37,6 @@ public class MoviesSyncTask {
             StoreMoviesData(PreferenceUtilities.TOP_RATED);
 
 
-
         } catch (Exception e) {
             e.printStackTrace();
 

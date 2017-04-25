@@ -7,5 +7,5 @@ import com.zoka.moviesapp.models.MoviesModel;
  */
 
 public interface ClickListener {
-    public void OnItemClicked(MoviesModel moviesModel);
+    void onItemClicked(MoviesModel moviesModel);
 }

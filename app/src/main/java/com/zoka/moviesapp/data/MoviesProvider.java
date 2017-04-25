@@ -19,12 +19,11 @@ import static com.zoka.moviesapp.data.MoviesContract.CONTENT_AUTHORITY;
  */
 
 public class MoviesProvider extends ContentProvider {
-    private MoviesDbHelper mOpenHelper;
-    private static final UriMatcher sUriMatcher = buildUriMatcher();
-
     static final int CODE_MOVIES = 100;
     static final int CODE_FAVOURITE_MOVIES = 200;
     static final int CODE_FAVOURITE_MOVIES_ID = 201;
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+    private MoviesDbHelper mOpenHelper;
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);

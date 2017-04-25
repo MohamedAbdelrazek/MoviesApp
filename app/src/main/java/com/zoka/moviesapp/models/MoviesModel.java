@@ -8,28 +8,6 @@ import android.os.Parcelable;
  */
 
 public class MoviesModel implements Parcelable {
-    private String moviesId;
-    private String moviesPosterPath;
-    private String movieTitle;
-
-    public String getMovieTitle() {
-        return movieTitle;
-    }
-
-    public void setMovieTitle(String movieTitle) {
-        this.movieTitle = movieTitle;
-    }
-
-    public MoviesModel()
-    {
-
-    }
-    protected MoviesModel(Parcel in) {
-        moviesId = in.readString();
-        moviesPosterPath = in.readString();
-        movieTitle=in.readString();
-    }
-
     public static final Creator<MoviesModel> CREATOR = new Creator<MoviesModel>() {
         @Override
         public MoviesModel createFromParcel(Parcel in) {
@@ -41,6 +19,27 @@ public class MoviesModel implements Parcelable {
             return new MoviesModel[size];
         }
     };
+    private String moviesId;
+    private String moviesPosterPath;
+    private String movieTitle;
+
+    public MoviesModel() {
+
+    }
+
+    protected MoviesModel(Parcel in) {
+        moviesId = in.readString();
+        moviesPosterPath = in.readString();
+        movieTitle = in.readString();
+    }
+
+    public String getMovieTitle() {
+        return movieTitle;
+    }
+
+    public void setMovieTitle(String movieTitle) {
+        this.movieTitle = movieTitle;
+    }
 
     public String getMoviesId() {
         return moviesId;

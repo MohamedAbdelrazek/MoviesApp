@@ -35,6 +35,10 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         inflater = LayoutInflater.from(context);
     }
 
+    private static String ConstructThumbnailUrl(String key) {
+        return "http://img.youtube.com/vi/" + key + "/0.jpg";
+    }
+
     public void swap(ArrayList<TrailerModel> zData) {
         if (zData != null) {
             data.clear();
@@ -43,7 +47,6 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
         }
 
     }
-
 
     @Override
     public TrailerHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,10 +63,6 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.Traile
                 .into(holder.trailerImage);
 
 
-    }
-
-    private static String ConstructThumbnailUrl(String key) {
-        return "http://img.youtube.com/vi/" + key + "/0.jpg";
     }
 
     @Override

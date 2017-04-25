@@ -37,24 +37,27 @@ import butterknife.ButterKnife;
  */
 
 public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final int LOADER_ID = 22;
-    private MoviesAdapter adapter;
-    @BindView(R.id.recycler_view_id)
-    RecyclerView mRecycler;
-    FrameLayout mFrameLayout;
     public final static String MOVIES_POSTER_PATH = "poster_path";
     public final static String MOVIES_POSTER_ID = "id";
     public static final String COLUMN_TITLE = "title";
-
+    private static final int LOADER_ID = 22;
     private static final String[] Movies_PROJECTION = {
             MOVIES_POSTER_PATH, MOVIES_POSTER_ID, COLUMN_TITLE
     };
     private static final String[] Movies_Fav_PROJECTION = {
-            MOVIES_POSTER_PATH, MOVIES_POSTER_ID,COLUMN_TITLE
+            MOVIES_POSTER_PATH, MOVIES_POSTER_ID, COLUMN_TITLE
 
     };
     private static MoviesListener mMoviesListener;
+    @BindView(R.id.recycler_view_id)
+    RecyclerView mRecycler;
+    FrameLayout mFrameLayout;
+    private MoviesAdapter adapter;
     private Tracker mTracker;
+
+    public static void setMoviesListener(MoviesListener moviesListener) {
+        mMoviesListener = moviesListener;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +65,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         setHasOptionsMenu(true);
         MoviesSyncUtils.initialize(getContext());
         AnalyticsApplication application = (AnalyticsApplication) getActivity().getApplication();
-         mTracker = application.getDefaultTracker();
+        mTracker = application.getDefaultTracker();
     }
 
     @Override
@@ -71,18 +74,16 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         super.onActivityCreated(savedInstanceState);
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movies, container, false);
         ButterKnife.bind(this, view);
-        //for showing data base structure>
         Stetho.initializeWithDefaults(getContext());
         adapter = new MoviesAdapter(getContext(), new ClickListener() {
 
             @Override
-            public void OnItemClicked(MoviesModel moviesModel) {
+            public void onItemClicked(MoviesModel moviesModel) {
                 mMoviesListener.setMovies(moviesModel);
 
 
@@ -94,22 +95,22 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         mRecycler.setAdapter(adapter);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.registerOnSharedPreferenceChangeListener(this);
-        //  getLoaderManager().initLoader(LOADER_ID, null, this);
         return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();
         mTracker.setScreenName("Movies Fragment screen !");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
-
 
     private int calculateNoOfColumns() {
         DisplayMetrics displayMetrics = getActivity().getResources().getDisplayMetrics();
@@ -124,13 +125,11 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         return noOfColumns;
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
 
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -147,7 +146,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -180,9 +178,5 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     public void onLoaderReset(Loader<Cursor> loader) {
         adapter.swap(null);
 
-    }
-
-    public static void setMoviesListener(MoviesListener moviesListener) {
-        mMoviesListener = moviesListener;
     }
 }

@@ -30,6 +30,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
         inflater = LayoutInflater.from(context);
     }
 
+    private static String CapsInit(String name) {
+        String capInitName = name.substring(0, 1).toUpperCase() + name.substring(1);
+        return capInitName;
+    }
+
     public void swap(ArrayList<ReviewModel> zData) {
         if (zData != null) {
             data.clear();
@@ -57,7 +62,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
 
     }
 
-
     @Override
     public int getItemCount() {
         return data.size();
@@ -78,11 +82,6 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewHold
 
 
         }
-    }
-
-    private static String CapsInit(String name) {
-        String capInitName = name.substring(0, 1).toUpperCase() + name.substring(1);
-        return capInitName;
     }
 
 }

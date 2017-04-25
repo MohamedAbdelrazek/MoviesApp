@@ -15,12 +15,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Response;
 
 public class NetworkUtils {
+    public static final String YOUTUBE_BASE = "http://www.youtube.com/watch?v=";
     private static String BASE_URL = "http://api.themoviedb.org/3/movie";
     private static String API_KEY_PARAM = "api_key";
     private static String REVIEW_PATH = "reviews";
     private static String TRAILER_PATH = "videos";
-    public static final String YOUTUBE_BASE = "http://www.youtube.com/watch?v=";
-
 
     public static URL buildQueryParam(String sort_path) throws MalformedURLException {
         Uri builtUri = Uri.parse(BASE_URL).buildUpon().appendPath(sort_path)

@@ -11,7 +11,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/favourite_id"
-        android:title="@string/favourite_label"
-        android:showAsAction="ifRoom"  />
+        android:showAsAction="ifRoom"
+        android:title="@string/favourite_label" />
 
 </menu>
