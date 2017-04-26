@@ -36,6 +36,18 @@
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
+        <!-- Widget receiver and services-->
+        <receiver
+            android:name=".widgit.MoviesWidgetProvider"
+            android:label="@string/widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="com.udacity.stockhawk.ACTION_DATA_UPDATED"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/movies_widget_provider_info"/>
+        </receiver>
 
         <provider
             android:name=".data.MoviesProvider"

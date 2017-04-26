@@ -34,8 +34,7 @@ public class MainActivity extends AppCompatActivity {
         MoviesFragment.setMoviesListener(new MoviesListener() {
             @Override
             public void setMovies(MoviesModel movies) {
-                if (mTowPan) //Case Tow pan Ui
-                {
+                if (mTowPan) {//Case Tow pan Ui
                     DetailsFragment dFragment = new DetailsFragment();
                     Bundle bundle = new Bundle();
                     bundle.putParcelable(Intent.EXTRA_TEXT, movies);

@@ -41,7 +41,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     public final static String MOVIES_POSTER_ID = "id";
     public static final String COLUMN_TITLE = "title";
     private static final int LOADER_ID = 22;
-    private static final String[] Movies_PROJECTION = {
+    public static final String[] Movies_PROJECTION = {
             MOVIES_POSTER_PATH, MOVIES_POSTER_ID, COLUMN_TITLE
     };
     private static final String[] Movies_Fav_PROJECTION = {
