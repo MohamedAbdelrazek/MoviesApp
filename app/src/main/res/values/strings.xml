@@ -15,4 +15,6 @@
     <string name="empty_stock_list">there is no any data ! </string>
     <string name="widget_cd">Popular Movies widget</string>
     <string name="widget_label">Movies Details</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

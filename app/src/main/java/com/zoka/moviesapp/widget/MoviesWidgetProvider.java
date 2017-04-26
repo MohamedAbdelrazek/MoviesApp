@@ -1,4 +1,4 @@
-package com.zoka.moviesapp.widgit;
+package com.zoka.moviesapp.widget;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -16,6 +16,7 @@ import android.widget.RemoteViews;
 import com.zoka.moviesapp.DetailsActivity;
 import com.zoka.moviesapp.MainActivity;
 import com.zoka.moviesapp.R;
+import com.zoka.moviesapp.sync.MoviesSyncTask;
 
 
 public class MoviesWidgetProvider extends AppWidgetProvider {
@@ -55,13 +56,13 @@ public class MoviesWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-
+        if (MoviesSyncTask.ACTION_DATA_UPDATED.equals(intent.getAction())) {
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
                     new ComponentName(context, getClass()));
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
         }
-
+    }
 
     /**
      * Sets the remote adapter used to fill in the list items

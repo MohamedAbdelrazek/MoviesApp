@@ -3,6 +3,7 @@ package com.zoka.moviesapp.sync;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 
 import com.zoka.moviesapp.data.MoviesContract;
 import com.zoka.moviesapp.utils.JsonUtils;
@@ -20,10 +21,13 @@ import java.net.URL;
  */
 
 public class MoviesSyncTask {
-
+    public static final String ACTION_DATA_UPDATED = "com.zoka.moviesapp.ACTION_DATA_UPDATED";
+    private static Context mContext;
     private static ContentResolver contentResolver;
 
     synchronized public static void syncMovies(final Context context) {
+        mContext = context;
+
 
         contentResolver = context.getContentResolver();
 
@@ -52,6 +56,7 @@ public class MoviesSyncTask {
             ContentValues[] data = JsonUtils.getMoviesData(jsonRes, sortType);
             if (data != null && data.length > 0) {
                 contentResolver.bulkInsert(MoviesContract.MoviesEntry.CONTENT_URI, data);
+                updateWidget(mContext);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -62,6 +67,11 @@ public class MoviesSyncTask {
         }
 
 
+    }
+
+    public static void updateWidget(Context context) {
+        Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
+        context.sendBroadcast(dataUpdatedIntent);
     }
 }
 
