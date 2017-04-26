@@ -1,11 +1,10 @@
-package com.zoka.moviesapp.widgit;
+package com.zoka.moviesapp.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Binder;
-import android.os.Handler;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -74,22 +73,14 @@ public class MoviesWidgetService extends RemoteViewsService {
                     R.layout.movie_single_item);
 
             final String imageUrl = data.getString(data.getColumnIndex(MoviesFragment.MOVIES_POSTER_PATH));
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
 
-                    Bitmap b = null;
-                    try {
-                        b = Picasso.with(getBaseContext()).load(imageUrl).get();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    remoteViews.setImageViewBitmap(R.id.poster_img_view, b);
-
-
-
-                }
-            });
+            Bitmap b = null;
+            try {
+                b = Picasso.with(getBaseContext()).load(imageUrl).get();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            remoteViews.setImageViewBitmap(R.id.poster_img_view, b);
             return remoteViews;
 
         }
