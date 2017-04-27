@@ -46,7 +46,7 @@
             android:label="@string/widget_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.udacity.stockhawk.ACTION_DATA_UPDATED" />
+                <action android:name="com.zoka.moviesapp.ACTION_DATA_UPDATED" />
             </intent-filter>
 
             <meta-data
