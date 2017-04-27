@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import com.zoka.moviesapp.MoviesFragment;
 import com.zoka.moviesapp.R;
 import com.zoka.moviesapp.data.MoviesContract;
+import com.zoka.moviesapp.models.MoviesModel;
 import com.zoka.moviesapp.utils.PreferenceUtilities;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class MoviesWidgetService extends RemoteViewsService {
             }
 
         }
+
         //Lifecycle end
         @Override
         public void onDataSetChanged() {
@@ -81,6 +83,17 @@ public class MoviesWidgetService extends RemoteViewsService {
                 e.printStackTrace();
             }
             remoteViews.setImageViewBitmap(R.id.poster_img_view, b);
+            remoteViews.setInt(R.id.widget, "setBackgroundResource", R.color.material_grey_850);
+
+            final Intent fillInIntent = new Intent();
+            MoviesModel moviesModel = new MoviesModel();
+            moviesModel.setMoviesId(data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_ID)));
+            moviesModel.setMoviesPosterPath(data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH)));
+            moviesModel.setMovieTitle(data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_TITLE)));
+
+            fillInIntent.putExtra(Intent.EXTRA_TEXT, moviesModel);
+            remoteViews.setOnClickFillInIntent(R.id.list_item_quote, fillInIntent);
+
             return remoteViews;
 
         }
